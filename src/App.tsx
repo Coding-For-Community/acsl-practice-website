@@ -3,7 +3,7 @@ import './App.css'
 import '@mantine/core/styles.css';
 import { AppShell, Group, Image, Loader, MultiSelect, rem, Select, Stack, Title } from '@mantine/core';
 import { Contest, Division, getRandomProblem, Problem } from './config';
-import { Quiz } from './pages/Quiz';
+import { Quiz, QuizError } from './pages/Quiz';
 import { useQuery } from '@tanstack/react-query';
 import { addPointsToPlayer, getGoogleSheetsData } from './googleSheetsApi';
 import { AnswerFeedback } from './pages/AnswerFeedback';
@@ -30,6 +30,15 @@ export function App() {
         <Title order={3}>Loading...</Title>
       </Group>
     )
+  }
+
+  let error: QuizError = "ok"
+  if (currentPlayer == null) {
+    error = "no user"
+  } else if (contests.length === 0) {
+    error = "no contest"
+  } else if (problem == null) {
+    error = "no questions"
   }
 
   return (
@@ -93,15 +102,16 @@ export function App() {
           {
             answer == null || problem == null
               ? <Quiz 
-                  hasNotChosen={contests.length === 0} 
+                  error={error}
                   problem={problem} 
                   onSubmit={answer => {
                     setAnswer(answer)
                     if (answer === problem!!.solution) {
                       addPointsToPlayer(currentPlayer!!, problem!!.points, sheetsDataQ.data)
+                        .then(() => sheetsDataQ.refetch())
+                        .then(() => console.log("Points added successfully."))
                     }
                   }} 
-                  canAnswer={currentPlayer != null}
                 />
               : <AnswerFeedback 
                   problem={problem}

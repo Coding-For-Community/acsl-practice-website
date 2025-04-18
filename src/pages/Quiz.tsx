@@ -2,15 +2,29 @@ import { Button, Image, rem, Text, TextInput } from "@mantine/core";
 import { useState } from "react";
 import { Problem } from "../config";
 
+export type QuizError = "ok" | "no user" | "no contest" | "no questions"
+
 export interface QuizArgs {
     problem: Problem | null
-    hasNotChosen: boolean,
-    canAnswer: boolean,
+    error: QuizError
     onSubmit: (answer: string) => void
 }
 
 export function Quiz(args: QuizArgs) {
-    const [answer, setAnswer] = useState("");
+    const [answer, setAnswer] = useState("")
+    const disabled = args.problem == null || args.error !== "ok"
+    let errMsg: string | null = null
+    switch (args.error) {
+        case "no user": 
+            errMsg = "Please tell us who you are (select your name)."
+            break
+        case "no contest": 
+            errMsg = "Please select a contest to answer questions."
+            break
+        case "no questions": 
+            errMsg = "No questions fit the criteria given."
+            break
+    }
     return (
         <>
             {
@@ -22,7 +36,7 @@ export function Quiz(args: QuizArgs) {
                         fit="contain"
                         h={rem(100)}
                     />
-                    : <Text>{args.hasNotChosen ? "Choose a contest to get started!" : "No problems fit these criteria."}</Text>
+                    : <Text>{errMsg}</Text>
             }
             <TextInput 
                 label="Answer: "
@@ -32,10 +46,9 @@ export function Quiz(args: QuizArgs) {
                 value={answer}
                 onChange={event => setAnswer(event.currentTarget.value)}
                 onSubmit={() => args.onSubmit(answer)}
-                disabled={!args.canAnswer}
-                error={args.canAnswer ? null : "Please tell us who you are(Choose User)."}
+                disabled={disabled}
             />
-            <Button onClick={() => args.onSubmit(answer)} disabled={!args.canAnswer}>
+            <Button onClick={() => args.onSubmit(answer)} disabled={disabled}>
                 Check Answer
             </Button>
         </>
