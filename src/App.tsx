@@ -1,12 +1,35 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import '@mantine/core/styles.css';
-import { AppShell, Burger, Group, MultiSelect, Select, Stack, Text, Title } from '@mantine/core';
+import { AppShell, Group, Image, Loader, MultiSelect, rem, Select, Stack, Title } from '@mantine/core';
+import { Contest, Division, getRandomProblem, Problem } from './config';
+import { Quiz } from './pages/Quiz';
+import { useQuery } from '@tanstack/react-query';
+import { getGoogleSheetsData } from './googleSheetsApi';
 
-function App() {
-  const [contests, setContests] = useState<string[]>([])
+export function App() {
+  const [contests, setContests] = useState<Contest[]>([])
+  const [division, setDivision] = useState<Division>("Junior")
+  const [problem, setProblem] = useState<Problem | null>(null)
+  const [currentPlayer, setCurrentPlayer] = useState<string | null>(null)
+  const [isAnswering, setAnswering] = useState(true)
+  const sheetsDataQ = useQuery({
+    queryKey: ['googleSheetsData'],
+    queryFn: getGoogleSheetsData,
+    staleTime: Infinity
+  })
+
+  if (!sheetsDataQ.isSuccess) {
+    if (sheetsDataQ.isError) {
+      console.log(sheetsDataQ.error)
+    }
+    return (
+      <Group align="center" justify="center" h="100vh">
+        <Loader color="cyan" size="xl" />
+        <Title order={3}>Loading...</Title>
+      </Group>
+    )
+  }
 
   return (
     <>
@@ -20,32 +43,60 @@ function App() {
       >
         <AppShell.Header>
           <Group mt={15} ml={10} gap={10}>
+            <Image
+              src="/src/assets/ca-icon.png"
+              alt="logo"
+              h={rem(30)}
+            />
             <Title order={3}>CA ACSL practice website</Title>
           </Group>
         </AppShell.Header>
 
         <AppShell.Navbar p="md">
-          <MultiSelect 
-            label="Choose Contests" 
-            data={["Contest 1", "Contest 2", "Contest 3", "Contest 4"]}
-            value={contests}
-            onChange={setContests} 
-            mb={15}
-          />
-
-          <Select 
-            label="Choose division"
-            data={["Senior", "Intermediate"]}
-          />
-
+          <Stack gap={15}>
+            <Select
+              label="Who are you?"
+              labelProps={{ c: "blue", fz: "lg" }}
+              data={sheetsDataQ.data.allPlayers}
+              value={currentPlayer}
+              onChange={value => {
+                if (value != null) {
+                  setCurrentPlayer(value)
+                }
+              }}
+            />
+            <MultiSelect 
+              label="Choose Contests" 
+              data={["Contest 1", "Contest 2", "Contest 3", "Contest 4"]}
+              value={contests}
+              onChange={values => {
+                setContests(values as Contest[])
+                setProblem(getRandomProblem(values as Contest[], division))
+              }} 
+            />
+            <Select 
+              label="Choose division"
+              data={["Senior", "Intermediate", "Junior"]}
+              value={division}
+              onChange={value => { 
+                if (value != null) { 
+                  setDivision(value as Division) 
+                  setProblem(getRandomProblem(contests, value as Division))
+                } 
+              }}
+            />
+          </Stack>
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Text>There are bla bla bla and bla. How does this work? sdfdsfsdfsdfdsfsfdffdefdfdfffdfdfdfdfdfdf</Text>
+          <Quiz 
+            hasNotChosen={contests.length === 0} 
+            problem={problem} 
+            submit={() => {}} 
+            canSubmit={currentPlayer != null}
+          />
         </AppShell.Main>
       </AppShell>
     </>
   )
 }
-
-export default App
