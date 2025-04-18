@@ -5,8 +5,8 @@ import { Problem } from "../config";
 export interface QuizArgs {
     problem: Problem | null
     hasNotChosen: boolean,
-    canSubmit: boolean,
-    submit: (answer: string) => void
+    canAnswer: boolean,
+    onSubmit: (answer: string) => void
 }
 
 export function Quiz(args: QuizArgs) {
@@ -31,11 +31,11 @@ export function Quiz(args: QuizArgs) {
                 w={rem(500)}
                 value={answer}
                 onChange={event => setAnswer(event.currentTarget.value)}
-                onSubmit={() => args.submit(answer)}
-                disabled={!args.canSubmit}
-                error={args.canSubmit ? null : "Please tell us who you are(Choose User)."}
+                onSubmit={() => args.onSubmit(answer)}
+                disabled={!args.canAnswer}
+                error={args.canAnswer ? null : "Please tell us who you are(Choose User)."}
             />
-            <Button onClick={() => args.submit(answer)} disabled={!args.canSubmit}>
+            <Button onClick={() => args.onSubmit(answer)} disabled={!args.canAnswer}>
                 Check Answer
             </Button>
         </>

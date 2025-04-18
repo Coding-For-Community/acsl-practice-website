@@ -5,14 +5,15 @@ import { AppShell, Group, Image, Loader, MultiSelect, rem, Select, Stack, Title 
 import { Contest, Division, getRandomProblem, Problem } from './config';
 import { Quiz } from './pages/Quiz';
 import { useQuery } from '@tanstack/react-query';
-import { getGoogleSheetsData } from './googleSheetsApi';
+import { addPointsToPlayer, getGoogleSheetsData } from './googleSheetsApi';
+import { AnswerFeedback } from './pages/AnswerFeedback';
 
 export function App() {
   const [contests, setContests] = useState<Contest[]>([])
   const [division, setDivision] = useState<Division>("Junior")
   const [problem, setProblem] = useState<Problem | null>(null)
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(null)
-  const [isAnswering, setAnswering] = useState(true)
+  const [answer, setAnswer] = useState<string | null>(null)
   const sheetsDataQ = useQuery({
     queryKey: ['googleSheetsData'],
     queryFn: getGoogleSheetsData,
@@ -89,12 +90,29 @@ export function App() {
         </AppShell.Navbar>
 
         <AppShell.Main>
-          <Quiz 
-            hasNotChosen={contests.length === 0} 
-            problem={problem} 
-            submit={() => {}} 
-            canSubmit={currentPlayer != null}
-          />
+          {
+            answer == null || problem == null
+              ? <Quiz 
+                  hasNotChosen={contests.length === 0} 
+                  problem={problem} 
+                  onSubmit={answer => {
+                    setAnswer(answer)
+                    if (answer === problem!!.solution) {
+                      addPointsToPlayer(currentPlayer!!, problem!!.points, sheetsDataQ.data)
+                    }
+                  }} 
+                  canAnswer={currentPlayer != null}
+                />
+              : <AnswerFeedback 
+                  problem={problem}
+                  userAnswer={answer}
+                  onContinue={() => {
+                    setAnswer(null)
+                    setProblem(getRandomProblem(contests, division))
+                  }}
+                />
+          }
+          
         </AppShell.Main>
       </AppShell>
     </>

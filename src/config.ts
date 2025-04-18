@@ -6,7 +6,8 @@ export interface Problem {
     imageName: string
     solution: string,
     contest: Contest,
-    division: Division
+    division: Division,
+    points: number
 }
 
 export function getRandomProblem(contests: Contest[], division: Division): Problem | null {
@@ -25,30 +26,35 @@ export const ALL_PROBLEMS: Problem[] = [
         imageName: "one.png",
         solution: "5123",
         contest: "Contest 1",
-        division: "Senior"
+        division: "Senior",
+        points: 1
     },
     {
         imageName: "two.png",
         solution: "5123",
         contest: "Contest 1",
-        division: "Senior"
+        division: "Senior",
+        points: 1
     },
     {
         imageName: "three.png",
         solution: "5123",
         contest: "Contest 1",
-        division: "Senior"
+        division: "Senior",
+        points: 1
     },
     {
         imageName: "four.png",
         solution: "5123",
         contest: "Contest 1",
-        division: "Senior"
+        division: "Senior",
+        points: 1
     },
     {
         imageName: "five.png",
         solution: "5123",
         contest: "Contest 1",
-        division: "Senior"
+        division: "Senior",
+        points: 1
     }
 ]
