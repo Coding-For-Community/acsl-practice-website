@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import '@mantine/core/styles.css';
-import { AppShell, Group, Image, Loader, MultiSelect, rem, Select, Stack, Title } from '@mantine/core';
+import { AppShell, Group, Image, Loader, MultiSelect, rem, Select, Stack, Text, Title } from '@mantine/core';
 import { Contest, Division, getRandomProblem, Problem } from './config';
 import { Quiz, QuizError } from './pages/Quiz';
 import { useQuery } from '@tanstack/react-query';
@@ -31,7 +31,11 @@ export function App() {
       </Group>
     )
   }
-
+  
+  const points = 
+    currentPlayer == null
+      ? 0
+      : sheetsDataQ.data.pointValues[sheetsDataQ.data.allPlayers.indexOf(currentPlayer)]
   let error: QuizError = "ok"
   if (currentPlayer == null) {
     error = "no user"
@@ -52,13 +56,20 @@ export function App() {
         padding="md"
       >
         <AppShell.Header>
-          <Group mt={15} ml={10} gap={10}>
+          <Group mt={15} ml={14} gap={10}>
             <Image
               src="/src/assets/ca-icon.png"
               alt="logo"
               h={rem(30)}
             />
             <Title order={3}>CA ACSL practice website</Title>
+            <Text 
+              ml="auto" 
+              mr={14} 
+              c="blue" 
+              fw="bold"
+              fz="lg"
+            >{points} Points</Text>
           </Group>
         </AppShell.Header>
 
