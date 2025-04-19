@@ -76,6 +76,7 @@ export function App() {
         <AppShell.Navbar p="md">
           <Stack gap={15}>
             <Select
+              searchable
               label="Who are you?"
               labelProps={{ c: "blue", fz: "lg" }}
               data={sheetsDataQ.data.allPlayers}
