@@ -28,25 +28,26 @@ export function Quiz(args: QuizArgs) {
     return (
         <>
             {
-                args.problem != null
-                    ? <Image 
-                        src={`/src/assets/contest-problems/${args.problem.imageName}`} 
-                        alt="Problem Image" 
-                        w="auto"
-                        fit="contain"
-                        h={rem(100)}
-                    />
-                    : <Text>{errMsg}</Text>
+                args.problem != null && 
+                <Image 
+                    src={`/src/assets/contest-problems/${args.problem.imageName}`} 
+                    alt="Problem Image" 
+                    w={rem(600)}
+                    fit="contain"
+                    h="auto"
+                />
             }
             <TextInput 
                 label="Answer: "
                 placeholder="Type Here"
                 mb={10}
-                w={rem(500)}
+                w={rem(600)}
                 value={answer}
                 onChange={event => setAnswer(event.currentTarget.value)}
                 onSubmit={() => args.onSubmit(answer)}
+                error={errMsg}
                 disabled={disabled}
+                errorProps={{ fz: "sm"}}
             />
             <Button onClick={() => args.onSubmit(answer)} disabled={disabled}>
                 Check Answer

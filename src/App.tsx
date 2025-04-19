@@ -48,15 +48,15 @@ export function App() {
   return (
     <>
       <AppShell
-        header={{ height: 60 }}
+        header={{ height: rem(60) }}
         navbar={{
-          width: 300,
+          width: rem(300),
           breakpoint: 'sm'
         }}
         padding="md"
       >
         <AppShell.Header>
-          <Group mt={15} ml={14} gap={10}>
+          <Group mt={rem(15)} ml={rem(14)} gap={rem(10)}>
             <Image
               src="/src/assets/ca-icon.png"
               alt="logo"
@@ -65,7 +65,7 @@ export function App() {
             <Title order={3}>CA ACSL practice website</Title>
             <Text 
               ml="auto" 
-              mr={14} 
+              mr={rem(14)} 
               c="blue" 
               fw="bold"
               fz="lg"
@@ -74,7 +74,7 @@ export function App() {
         </AppShell.Header>
 
         <AppShell.Navbar p="md">
-          <Stack gap={15}>
+          <Stack gap={rem(15)}>
             <Select
               searchable
               label="Who are you?"
@@ -134,7 +134,6 @@ export function App() {
                   }}
                 />
           }
-          
         </AppShell.Main>
       </AppShell>
     </>

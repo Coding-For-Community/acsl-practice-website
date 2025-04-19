@@ -10,15 +10,22 @@ export interface Problem {
     points: number
 }
 
+let seenProblems: (Problem | null)[] = [null, null]
+
 export function getRandomProblem(contests: Contest[], division: Division): Problem | null {
-    const filteredProblems = ALL_PROBLEMS.filter(problem => {
-        return contests.includes(problem.contest) && problem.division === division
-    })
-    if (filteredProblems.length === 0) {
+    const problems = ALL_PROBLEMS.filter(
+        problem => contests.includes(problem.contest) && problem.division === division
+    )
+    if (problems.length === 0) {
         return null
     }
-    const randomIndex = Math.floor(Math.random() * filteredProblems.length)
-    return filteredProblems[randomIndex]
+    const newProblems = problems.filter(problem => !seenProblems.includes(problem))
+    const problem = 
+        newProblems.length > 0
+            ? newProblems[Math.floor(Math.random() * newProblems.length)]
+            : problems[Math.floor(Math.random() * problems.length)]
+    seenProblems = seenProblems.slice(1).concat(problem)
+    return problem
 }
 
 export const ALL_PROBLEMS: Problem[] = [
