@@ -1,5 +1,5 @@
 import { Button, Image, rem, Text, Title } from "@mantine/core"
-import { Problem } from "../config"
+import { Problem } from "../api/Problem"
 
 export function AnswerFeedback(args: {problem: Problem, userAnswer: string, onContinue: () => void}) {
     const isCorrect = args.problem.solution.toLowerCase() === args.userAnswer.toLowerCase() 

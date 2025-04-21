@@ -1,20 +1,19 @@
-
-export type Contest = "Contest 1" | "Contest 2" | "Contest 3" | "Contest 4"
-export type Division = "Senior" | "Intermediate" | "Junior"
+import { Topic } from "./Topic"
+import { Division } from "./Division"
 
 export interface Problem {
     imageName: string
     solution: string,
-    contest: Contest,
+    topic: Topic,
     division: Division,
     points: number
 }
 
 let seenProblems: (Problem | null)[] = [null, null]
 
-export function getRandomProblem(contests: Contest[], division: Division): Problem | null {
+export function getRandomProblem(topics: Topic[], division: Division): Problem | null {
     const problems = ALL_PROBLEMS.filter(
-        problem => contests.includes(problem.contest) && problem.division === division
+        problem => topics.includes(problem.topic) && problem.division === division
     )
     if (problems.length === 0) {
         return null
@@ -32,35 +31,35 @@ export const ALL_PROBLEMS: Problem[] = [
     {
         imageName: "one.png",
         solution: "5123",
-        contest: "Contest 1",
+        topic: Topic.CompNumSystems,
         division: "Senior",
         points: 1
     },
     {
         imageName: "two.png",
         solution: "5123",
-        contest: "Contest 1",
+        topic: Topic.CompNumSystems,
         division: "Senior",
         points: 1
     },
     {
         imageName: "three.png",
         solution: "5123",
-        contest: "Contest 1",
+        topic: Topic.CompNumSystems,
         division: "Senior",
         points: 1
     },
     {
         imageName: "four.png",
         solution: "5123",
-        contest: "Contest 1",
+        topic: Topic.CompNumSystems,
         division: "Senior",
         points: 1
     },
     {
         imageName: "five.png",
         solution: "5123",
-        contest: "Contest 1",
+        topic: Topic.CompNumSystems,
         division: "Senior",
         points: 1
     }

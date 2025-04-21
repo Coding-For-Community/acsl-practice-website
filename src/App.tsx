@@ -1,22 +1,23 @@
-import { useState } from 'react'
 import './App.css'
-import '@mantine/core/styles.css';
+import { useState } from 'react'
 import { AppShell, Group, Image, Loader, MultiSelect, rem, Select, Stack, Text, Title } from '@mantine/core';
-import { Contest, Division, getRandomProblem, Problem } from './config';
+import { getRandomProblem, Problem } from './api/Problem';
+import { Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
 import { useQuery } from '@tanstack/react-query';
-import { addPointsToPlayer, getGoogleSheetsData } from './googleSheetsApi';
+import { allPlayers, fetchAllPlayerData, updatePoints } from './api/api';
 import { AnswerFeedback } from './pages/AnswerFeedback';
+import { DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHEMA, Topic } from './api/Topic';
 
 export function App() {
-  const [contests, setContests] = useState<Contest[]>([])
+  const [topics, setTopics] = useState<Topic[]>([])
   const [division, setDivision] = useState<Division>("Junior")
   const [problem, setProblem] = useState<Problem | null>(null)
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(null)
   const [answer, setAnswer] = useState<string | null>(null)
   const sheetsDataQ = useQuery({
     queryKey: ['googleSheetsData'],
-    queryFn: getGoogleSheetsData,
+    queryFn: fetchAllPlayerData,
     staleTime: Infinity
   })
 
@@ -32,15 +33,15 @@ export function App() {
     )
   }
   
-  const points = 
+  const coins = 
     currentPlayer == null
       ? 0
-      : sheetsDataQ.data.pointValues[sheetsDataQ.data.allPlayers.indexOf(currentPlayer)]
+      : sheetsDataQ.data[currentPlayer].totalCoins
   let error: QuizError = "ok"
   if (currentPlayer == null) {
     error = "no user"
-  } else if (contests.length === 0) {
-    error = "no contest"
+  } else if (topics.length === 0) {
+    error = "no topic"
   } else if (problem == null) {
     error = "no questions"
   }
@@ -69,7 +70,7 @@ export function App() {
               c="blue" 
               fw="bold"
               fz="lg"
-            >{points} Points</Text>
+            >{coins} Coins</Text>
           </Group>
         </AppShell.Header>
 
@@ -79,21 +80,23 @@ export function App() {
               searchable
               label="Who are you?"
               labelProps={{ c: "blue", fz: "lg" }}
-              data={sheetsDataQ.data.allPlayers}
+              data={allPlayers(sheetsDataQ.data)}
               value={currentPlayer}
               onChange={value => {
                 if (value != null) {
+                  setAnswer(null)
                   setCurrentPlayer(value)
                 }
               }}
             />
             <MultiSelect 
-              label="Choose Contests" 
-              data={["Contest 1", "Contest 2", "Contest 3", "Contest 4"]}
-              value={contests}
+              label="Choose topics to practice" 
+              data={division === "Junior" ? JUNIOR_DIVISION_SELECT_SCHEMA : DIVISION_SELECT_SCHEMA}
+              value={topics}
               onChange={values => {
-                setContests(values as Contest[])
-                setProblem(getRandomProblem(values as Contest[], division))
+                setAnswer(null)
+                setTopics(values as Topic[])
+                setProblem(getRandomProblem(values as Topic[], division))
               }} 
             />
             <Select 
@@ -102,8 +105,9 @@ export function App() {
               value={division}
               onChange={value => { 
                 if (value != null) { 
+                  setAnswer(null)
                   setDivision(value as Division) 
-                  setProblem(getRandomProblem(contests, value as Division))
+                  setProblem(getRandomProblem(topics, value as Division))
                 } 
               }}
             />
@@ -118,11 +122,13 @@ export function App() {
                   problem={problem} 
                   onSubmit={answer => {
                     setAnswer(answer)
-                    if (answer === problem!!.solution) {
-                      addPointsToPlayer(currentPlayer!!, problem!!.points, sheetsDataQ.data)
-                        .then(() => sheetsDataQ.refetch())
-                        .then(() => console.log("Points added successfully."))
-                    }
+                    updatePoints(
+                      sheetsDataQ.data[currentPlayer!!], 
+                      problem!!.topic, 
+                      answer === problem!!.solution
+                    )
+                      .then(() => sheetsDataQ.refetch())
+                      .then(() => console.log("Points added successfully."))
                   }} 
                 />
               : <AnswerFeedback 
@@ -130,7 +136,7 @@ export function App() {
                   userAnswer={answer}
                   onContinue={() => {
                     setAnswer(null)
-                    setProblem(getRandomProblem(contests, division))
+                    setProblem(getRandomProblem(topics, division))
                   }}
                 />
           }

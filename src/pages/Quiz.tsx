@@ -1,8 +1,8 @@
-import { Button, Image, rem, Text, TextInput } from "@mantine/core";
+import { Button, Image, rem, TextInput } from "@mantine/core";
 import { useState } from "react";
-import { Problem } from "../config";
+import { Problem } from "../api/Problem";
 
-export type QuizError = "ok" | "no user" | "no contest" | "no questions"
+export type QuizError = "ok" | "no user" | "no topic" | "no questions"
 
 export interface QuizArgs {
     problem: Problem | null
@@ -18,8 +18,8 @@ export function Quiz(args: QuizArgs) {
         case "no user": 
             errMsg = "Please tell us who you are (select your name)."
             break
-        case "no contest": 
-            errMsg = "Please select a contest to answer questions."
+        case "no topic": 
+            errMsg = "Please select a topic to answer questions."
             break
         case "no questions": 
             errMsg = "No questions fit the criteria given."
