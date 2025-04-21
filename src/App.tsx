@@ -1,6 +1,6 @@
 import './App.css'
 import { useState } from 'react'
-import { AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Stack, Text, Title } from '@mantine/core';
+import { Affix, AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Stack, Text, Title } from '@mantine/core';
 import { getRandomProblem, Problem } from './api/Problem';
 import { Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
@@ -108,7 +108,6 @@ export function App() {
             data={division === "Junior" ? JUNIOR_DIVISION_SELECT_SCHEMA : DIVISION_SELECT_SCHEMA}
             value={topics}
             clearable
-            searchable
             onChange={values => {
               setAnswer(null)
               setTopics(values as Topic[])
@@ -116,10 +115,22 @@ export function App() {
             }} 
           />
           <Chip 
-            onClick={() => topics === ALL_CONTEST_TOPICS ? setTopics([]) : setTopics(ALL_CONTEST_TOPICS)}
+            onClick={() => {
+              if (topics === ALL_CONTEST_TOPICS) {
+                setTopics([])
+                setProblem(null)
+              } else {
+                setTopics(ALL_CONTEST_TOPICS)
+                setProblem(getRandomProblem(ALL_CONTEST_TOPICS, division))
+              }
+            }}
             checked={topics.length === ALL_CONTEST_TOPICS.length}
           >Practice Everything</Chip>
         </AppShell.Navbar>
+
+        <AppShell.Aside w={rem(350)}>
+          Leaderboard/User Stats
+        </AppShell.Aside>
 
         <AppShell.Main>
           {
@@ -149,6 +160,10 @@ export function App() {
           }
         </AppShell.Main>
       </AppShell>
+
+      <Affix position={{ bottom: rem(15), right: rem(15) }}>
+        <Button>View Stats & Leaderboard</Button>
+      </Affix>
     </>
   )
 }
