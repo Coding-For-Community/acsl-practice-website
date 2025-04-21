@@ -1,13 +1,13 @@
 import './App.css'
 import { useState } from 'react'
-import { AppShell, Group, Image, Loader, MultiSelect, rem, Select, Stack, Text, Title } from '@mantine/core';
+import { AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Stack, Text, Title } from '@mantine/core';
 import { getRandomProblem, Problem } from './api/Problem';
 import { Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
 import { useQuery } from '@tanstack/react-query';
 import { allPlayers, fetchAllPlayerData, updatePoints } from './api/api';
 import { AnswerFeedback } from './pages/AnswerFeedback';
-import { DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHEMA, Topic } from './api/Topic';
+import { ALL_CONTEST_TOPICS, DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHEMA, Topic } from './api/Topic';
 
 export function App() {
   const [topics, setTopics] = useState<Topic[]>([])
@@ -74,44 +74,51 @@ export function App() {
           </Group>
         </AppShell.Header>
 
-        <AppShell.Navbar p="md">
-          <Stack gap={rem(15)}>
-            <Select
-              searchable
-              label="Who are you?"
-              labelProps={{ c: "blue", fz: "lg" }}
-              data={allPlayers(sheetsDataQ.data)}
-              value={currentPlayer}
-              onChange={value => {
-                if (value != null) {
-                  setAnswer(null)
-                  setCurrentPlayer(value)
-                }
-              }}
-            />
-            <MultiSelect 
-              label="Choose topics to practice" 
-              data={division === "Junior" ? JUNIOR_DIVISION_SELECT_SCHEMA : DIVISION_SELECT_SCHEMA}
-              value={topics}
-              onChange={values => {
+        <AppShell.Navbar px={rem(15)}>
+          <Select
+            my={rem(15)}
+            searchable
+            label="Who are you?"
+            labelProps={{ c: "blue", fz: "lg" }}
+            data={allPlayers(sheetsDataQ.data)}
+            value={currentPlayer}
+            onChange={value => {
+              if (value != null) {
                 setAnswer(null)
-                setTopics(values as Topic[])
-                setProblem(getRandomProblem(values as Topic[], division))
-              }} 
-            />
-            <Select 
-              label="Choose division"
-              data={["Senior", "Intermediate", "Junior"]}
-              value={division}
-              onChange={value => { 
-                if (value != null) { 
-                  setAnswer(null)
-                  setDivision(value as Division) 
-                  setProblem(getRandomProblem(topics, value as Division))
-                } 
-              }}
-            />
-          </Stack>
+                setCurrentPlayer(value)
+              }
+            }}
+          />
+          <Select 
+            mb={rem(15)}
+            label="Choose division"
+            data={["Senior", "Intermediate", "Junior"]}
+            value={division}
+            onChange={value => { 
+              if (value != null) { 
+                setAnswer(null)
+                setDivision(value as Division) 
+                setProblem(getRandomProblem(topics, value as Division))
+              } 
+            }}
+          />
+          <MultiSelect 
+            mb={rem(10)}
+            label="Choose topics to practice" 
+            data={division === "Junior" ? JUNIOR_DIVISION_SELECT_SCHEMA : DIVISION_SELECT_SCHEMA}
+            value={topics}
+            clearable
+            searchable
+            onChange={values => {
+              setAnswer(null)
+              setTopics(values as Topic[])
+              setProblem(getRandomProblem(values as Topic[], division))
+            }} 
+          />
+          <Chip 
+            onClick={() => topics === ALL_CONTEST_TOPICS ? setTopics([]) : setTopics(ALL_CONTEST_TOPICS)}
+            checked={topics.length === ALL_CONTEST_TOPICS.length}
+          >Practice Everything</Chip>
         </AppShell.Navbar>
 
         <AppShell.Main>
