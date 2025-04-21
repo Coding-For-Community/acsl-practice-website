@@ -5,7 +5,7 @@ export function AnswerFeedback(args: {problem: Problem, userAnswer: string, onCo
     const isCorrect = args.problem.solution.toLowerCase() === args.userAnswer.toLowerCase() 
     const msg = isCorrect ? "Correct! Good Job!!!" : ("Incorrect! The answer was: " + args.problem.solution)
     return (
-        <>
+        <div>
             <Title order={3} mb={rem(10)} c={isCorrect ? "green" : "red"}>{msg}</Title>
             <Text mb={rem(5)}>Solution: </Text>
             <Image 
@@ -26,6 +26,6 @@ export function AnswerFeedback(args: {problem: Problem, userAnswer: string, onCo
                 mb={rem(5)}
             />
             <Button color={isCorrect ? "green" : "gray"} onClick={args.onContinue}>Continue</Button>
-        </>
+        </div>
     )
 }

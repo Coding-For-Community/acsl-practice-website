@@ -1,6 +1,7 @@
 import { Button, Image, rem, TextInput } from "@mantine/core";
 import { useState } from "react";
 import { Problem } from "../api/Problem";
+import { getHotkeyHandler } from "@mantine/hooks";
 
 export type QuizError = "ok" | "no user" | "no topic" | "no questions"
 
@@ -26,7 +27,7 @@ export function Quiz(args: QuizArgs) {
             break
     }
     return (
-        <>
+        <div>
             {
                 args.problem != null && 
                 <Image 
@@ -44,7 +45,9 @@ export function Quiz(args: QuizArgs) {
                 w={rem(600)}
                 value={answer}
                 onChange={event => setAnswer(event.currentTarget.value)}
-                onSubmit={() => args.onSubmit(answer)}
+                onKeyDown={getHotkeyHandler([
+                    ['Enter', () => args.onSubmit(answer)],
+                ])}
                 error={errMsg}
                 disabled={disabled}
                 errorProps={{ fz: "sm"}}
@@ -52,6 +55,6 @@ export function Quiz(args: QuizArgs) {
             <Button onClick={() => args.onSubmit(answer)} disabled={disabled}>
                 Check Answer
             </Button>
-        </>
+        </div>
     )
 }

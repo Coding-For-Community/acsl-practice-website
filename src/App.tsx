@@ -47,7 +47,7 @@ export function App() {
   }
 
   return (
-    <>
+    <div>
       <AppShell
         header={{ height: rem(60) }}
         navbar={{
@@ -116,6 +116,7 @@ export function App() {
           />
           <Chip 
             onClick={() => {
+              setAnswer(null)
               if (topics === ALL_CONTEST_TOPICS) {
                 setTopics([])
                 setProblem(null)
@@ -164,6 +165,6 @@ export function App() {
       <Affix position={{ bottom: rem(15), right: rem(15) }}>
         <Button>View Stats & Leaderboard</Button>
       </Affix>
-    </>
+    </div>
   )
 }
