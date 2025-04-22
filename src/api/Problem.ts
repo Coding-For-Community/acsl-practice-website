@@ -29,32 +29,32 @@ export function getRandomProblem(topics: Topic[], division: Division): Problem |
 export const ALL_PROBLEMS: Problem[] = [
     {
         imageName: "one.png",
-        solution: "5123",
-        topic: Topic.CompNumSystems,
-        division: "Senior"
+        solution: "00100",
+        topic: Topic.BitStringFlicking,
+        division: "Intermediate"
     },
     {
         imageName: "two.png",
-        solution: "5123",
-        topic: Topic.CompNumSystems,
-        division: "Senior"
+        solution: "0*01*",
+        topic: Topic.BitStringFlicking,
+        division: "Intermediate"
     },
     {
         imageName: "three.png",
-        solution: "5123",
-        topic: Topic.CompNumSystems,
-        division: "Senior"
+        solution: "00111",
+        topic: Topic.BitStringFlicking,
+        division: "Intermediate"
     },
     {
         imageName: "four.png",
-        solution: "5123",
-        topic: Topic.CompNumSystems,
-        division: "Senior"
+        solution: "40",
+        topic: Topic.LISP,
+        division: "Intermediate"
     },
     {
         imageName: "five.png",
-        solution: "5123",
-        topic: Topic.CompNumSystems,
-        division: "Senior"
+        solution: "(d f)",
+        topic: Topic.LISP,
+        division: "Intermediate"
     }
 ]
