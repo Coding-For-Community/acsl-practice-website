@@ -9,7 +9,7 @@ export interface PlayerData {
 
 export async function fetchAllPlayerData(): Promise<AllPlayersData> {
     const resp = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${import.meta.env.VITE_SHEET_ID}/values/Main!A1:M100?key=${import.meta.env.VITE_SHEETS_API_KEY}`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${import.meta.env.VITE_SHEET_ID}/values/Main!A1:N100?key=${import.meta.env.VITE_SHEETS_API_KEY}`,
         {
             method: "GET",
             headers: {

@@ -19,7 +19,7 @@ export function getRandomProblem(topics: Topic[], division: Division): Problem |
     }
     const newProblems = problems.filter(problem => !seenProblems.includes(problem))
     const problem = 
-        newProblems.length > 0
+        newProblems.length > 1
             ? newProblems[Math.floor(Math.random() * newProblems.length)]
             : problems[Math.floor(Math.random() * problems.length)]
     seenProblems = seenProblems.slice(1).concat(problem)
@@ -54,7 +54,7 @@ export const ALL_PROBLEMS: Problem[] = [
     {
         imageName: "five.png",
         solution: "(d f)",
-        topic: Topic.LISP,
+        topic: Topic.AssemblyLang,
         division: "Intermediate"
     }
 ]

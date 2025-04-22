@@ -1,15 +1,14 @@
 import './App.css'
 import { useState } from 'react'
-import { AppShell, Button, Chip, Divider, Drawer, Group, Image, Loader, MultiSelect, Progress, rem, Select, Space, Table, Text, Title } from '@mantine/core';
+import { AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Text, Title } from '@mantine/core';
 import { getRandomProblem, Problem } from './api/Problem';
-import { Division } from "./api/Division";
+import { ALL_DIVISIONS, Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
 import { useQuery } from '@tanstack/react-query';
 import { allPlayers, fetchAllPlayerData, updatePoints } from './api/api';
 import { AnswerFeedback } from './pages/AnswerFeedback';
 import { ALL_CONTEST_TOPICS, DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHEMA, Topic } from './api/Topic';
 import { Leaderboard } from './pages/Leaderboard';
-import { TopicScore } from './components/TopicScore';
 import { UserStatistics } from './pages/UserStatistics';
 
 export function App() {
@@ -101,7 +100,7 @@ export function App() {
           <Select 
             mb={rem(15)}
             label="Choose division"
-            data={["Senior", "Intermediate", "Junior"]}
+            data={ALL_DIVISIONS}
             value={division}
             onChange={value => { 
               if (value != null) { 
