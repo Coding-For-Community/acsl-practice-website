@@ -5,8 +5,7 @@ export interface Problem {
     imageName: string
     solution: string,
     topic: Topic,
-    division: Division,
-    points: number
+    division: Division
 }
 
 let seenProblems: (Problem | null)[] = [null, null]
@@ -32,35 +31,30 @@ export const ALL_PROBLEMS: Problem[] = [
         imageName: "one.png",
         solution: "5123",
         topic: Topic.CompNumSystems,
-        division: "Senior",
-        points: 1
+        division: "Senior"
     },
     {
         imageName: "two.png",
         solution: "5123",
         topic: Topic.CompNumSystems,
-        division: "Senior",
-        points: 1
+        division: "Senior"
     },
     {
         imageName: "three.png",
         solution: "5123",
         topic: Topic.CompNumSystems,
-        division: "Senior",
-        points: 1
+        division: "Senior"
     },
     {
         imageName: "four.png",
         solution: "5123",
         topic: Topic.CompNumSystems,
-        division: "Senior",
-        points: 1
+        division: "Senior"
     },
     {
         imageName: "five.png",
         solution: "5123",
         topic: Topic.CompNumSystems,
-        division: "Senior",
-        points: 1
+        division: "Senior"
     }
 ]
