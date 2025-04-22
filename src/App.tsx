@@ -1,6 +1,6 @@
 import './App.css'
 import { useState } from 'react'
-import { Affix, AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Stack, Text, Title } from '@mantine/core';
+import { Affix, AppShell, Button, Card, Chip, CloseIcon, Container, Drawer, Group, Image, InputBase, Loader, MultiSelect, Paper, rem, Select, Stack, Text, Title, useMantineTheme } from '@mantine/core';
 import { getRandomProblem, Problem } from './api/Problem';
 import { Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
@@ -8,13 +8,23 @@ import { useQuery } from '@tanstack/react-query';
 import { allPlayers, fetchAllPlayerData, updatePoints } from './api/api';
 import { AnswerFeedback } from './pages/AnswerFeedback';
 import { ALL_CONTEST_TOPICS, DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHEMA, Topic } from './api/Topic';
+import { Trophy } from './components/icons/Trophy';
+import { NumberedTrophy } from './components/icons/NumberedTrophy';
+import { Star } from './components/icons/Star';
+import { PlayerRank } from './components/PlayerRank';
+import { Leaderboard } from './pages/Leaderboard';
 
 export function App() {
+  const theme = useMantineTheme()
   const [topics, setTopics] = useState<Topic[]>([])
   const [division, setDivision] = useState<Division>("Junior")
   const [problem, setProblem] = useState<Problem | null>(null)
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(null)
-  const [answer, setAnswer] = useState<string | null>(null)
+  const [answer, setAnswer] = useState<string | null>(null) 
+
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false)
+  const [statsOpen, setStatsOpen] = useState(false)
+  
   const sheetsDataQ = useQuery({
     queryKey: ['googleSheetsData'],
     queryFn: fetchAllPlayerData,
@@ -51,7 +61,7 @@ export function App() {
       <AppShell
         header={{ height: rem(60) }}
         navbar={{
-          width: rem(300),
+          width: rem(325),
           breakpoint: 'sm'
         }}
         padding="md"
@@ -70,7 +80,9 @@ export function App() {
               c="blue" 
               fw="bold"
               fz="lg"
-            >{coins} Coins</Text>
+            >
+              {coins} Coins
+            </Text>
           </Group>
         </AppShell.Header>
 
@@ -126,12 +138,18 @@ export function App() {
               }
             }}
             checked={topics.length === ALL_CONTEST_TOPICS.length}
-          >Practice Everything</Chip>
+          >
+            Practice Everything
+          </Chip>
+          <Group gap={rem(15)} style={{position: "absolute", bottom: rem(15), left: rem(15)}}>
+            <Button onClick={() => setStatsOpen(true)}>
+              Your Statistics
+            </Button>
+            <Button color="yellow" onClick={() => setLeaderboardOpen(true)}>
+              Leaderboard
+            </Button>
+          </Group>
         </AppShell.Navbar>
-
-        <AppShell.Aside w={rem(350)}>
-          Leaderboard/User Stats
-        </AppShell.Aside>
 
         <AppShell.Main>
           {
@@ -162,9 +180,22 @@ export function App() {
         </AppShell.Main>
       </AppShell>
 
-      <Affix position={{ bottom: rem(15), right: rem(15) }}>
-        <Button>View Stats & Leaderboard</Button>
-      </Affix>
+      <Drawer 
+        opened={statsOpen} 
+        onClose={() => setStatsOpen(false)}  
+        padding={rem(15)} 
+        withCloseButton={false}
+        size="md"
+        position="right"
+      >
+      </Drawer>
+
+      <Leaderboard 
+        open={leaderboardOpen} 
+        close={() => setLeaderboardOpen(false)} 
+        playerData={sheetsDataQ.data} 
+        currentPlayer={currentPlayer} 
+      />
     </div>
   )
 }

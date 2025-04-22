@@ -18,7 +18,6 @@ export async function fetchAllPlayerData(): Promise<AllPlayersData> {
         }
     )
     if (resp.status != 200) {
-        console.error("")
         console.error(resp.text)
     }
     const json = await resp.json()

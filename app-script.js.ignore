@@ -27,8 +27,9 @@ function doPost(event) {
     categoryScoreCell.setValue((correct ? 1 : 0) + "/1")
   } else {
     console.log("initial value: " + initialValue)
-    const numCorrect = parseInt(initialValue.substring(0, 1)) + (correct ? 1 : 0)
-    const numTotal = parseInt(initialValue.substring(2)) + 1
+    const slashIdx = initialValue.indexOf("/")
+    const numCorrect = parseInt(initialValue.substring(0, slashIdx)) + (correct ? 1 : 0)
+    const numTotal = parseInt(initialValue.substring(slashIdx + 1)) + 1
     categoryScoreCell.setValue(numCorrect + "/" + numTotal)
   }
 
