@@ -1,6 +1,6 @@
 import './App.css'
 import { useState } from 'react'
-import { Affix, AppShell, Button, Card, Chip, CloseIcon, Container, Drawer, Group, Image, InputBase, Loader, MultiSelect, Paper, rem, Select, Stack, Text, Title, useMantineTheme } from '@mantine/core';
+import { AppShell, Button, Chip, Divider, Drawer, Group, Image, Loader, MultiSelect, Progress, rem, Select, Space, Table, Text, Title } from '@mantine/core';
 import { getRandomProblem, Problem } from './api/Problem';
 import { Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
@@ -8,14 +8,11 @@ import { useQuery } from '@tanstack/react-query';
 import { allPlayers, fetchAllPlayerData, updatePoints } from './api/api';
 import { AnswerFeedback } from './pages/AnswerFeedback';
 import { ALL_CONTEST_TOPICS, DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHEMA, Topic } from './api/Topic';
-import { Trophy } from './components/icons/Trophy';
-import { NumberedTrophy } from './components/icons/NumberedTrophy';
-import { Star } from './components/icons/Star';
-import { PlayerRank } from './components/PlayerRank';
 import { Leaderboard } from './pages/Leaderboard';
+import { TopicScore } from './components/TopicScore';
+import { UserStatistics } from './pages/UserStatistics';
 
 export function App() {
-  const theme = useMantineTheme()
   const [topics, setTopics] = useState<Topic[]>([])
   const [division, setDivision] = useState<Division>("Junior")
   const [problem, setProblem] = useState<Problem | null>(null)
@@ -180,15 +177,11 @@ export function App() {
         </AppShell.Main>
       </AppShell>
 
-      <Drawer 
-        opened={statsOpen} 
-        onClose={() => setStatsOpen(false)}  
-        padding={rem(15)} 
-        withCloseButton={false}
-        size="md"
-        position="right"
-      >
-      </Drawer>
+      <UserStatistics
+        open={statsOpen} 
+        close={() => setStatsOpen(false)} 
+        playerData={currentPlayer == null ? null : sheetsDataQ.data[currentPlayer]}
+      />
 
       <Leaderboard 
         open={leaderboardOpen} 
