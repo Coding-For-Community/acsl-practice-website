@@ -1,6 +1,6 @@
 import './App.css'
 import { useState } from 'react'
-import { AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Text, Title } from '@mantine/core';
+import { AppShell, Button, Chip, Group, Image, List, Loader, Modal, MultiSelect, rem, Select, Text, Title } from '@mantine/core';
 import { getRandomProblem, isCorrect, Problem } from './api/Problem';
 import { ALL_DIVISIONS, Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
@@ -11,9 +11,10 @@ import { ALL_CONTEST_TOPICS, DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHE
 import { Leaderboard } from './pages/Leaderboard';
 import { UserStatistics } from './pages/UserStatistics';
 
-const ANON_PLAYER_NAME = "(Anonymous Player)"
+const ANON_PLAYER_NAME = "ANONYMOUS PLAYER"
 
 export function App() {
+  const [warningOpen, setWarningOpen] = useState(true)
   const [topics, setTopics] = useState<Topic[]>([])
   const [division, setDivision] = useState<Division>("Junior")
   const [problem, setProblem] = useState<Problem | null>(null)
@@ -91,7 +92,7 @@ export function App() {
             searchable
             label="Who are you?"
             labelProps={{ c: "blue", fz: "lg" }}
-            data={allPlayers(sheetsDataQ.data).concat(ANON_PLAYER_NAME)}
+            data={[ANON_PLAYER_NAME].concat(allPlayers(sheetsDataQ.data))}
             value={currentPlayer}
             onChange={value => {
               if (value != null) {
@@ -192,6 +193,25 @@ export function App() {
         playerData={sheetsDataQ.data} 
         currentPlayer={currentPlayer} 
       />
+
+      <Modal opened={warningOpen} onClose={() => setWarningOpen(false)} size="lg">
+        <Title order={4}>Important stuff before starting</Title>
+        <List w={rem(550)}>
+          <List.Item>
+            For Digital Elec/Boolean Alg questions which have multiple answers 
+            that satisfy the conditions given in the problem,
+            only enter ONE answer.
+          </List.Item>
+          <List.Item>
+            For instance, if the tuples (0, 1, 1) and (1, 0, 1) satisfy the conditions given in the problem,
+            only answer (0, 1, 1) OR (1, 0, 1). Do not answer both(separated by commas or anything like that sort).
+          </List.Item>
+          <List.Item>
+            If you want to earn points, ask an ACSL leader to register you.
+            Otherwise, choose the "ANONYMOUS PLAYER" option.   
+          </List.Item>  
+        </List>
+      </Modal>
     </div>
   )
 }

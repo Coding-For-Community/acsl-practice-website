@@ -4,21 +4,22 @@ import { Problem } from "./Problem"
 import { Topic } from "./Topic"
 
 type FileName = string
-type Solution = string | { answers: string[], tolerance: Tolerance }
+type Solution = string | { answers: string[], tolerance?: Tolerance }
 
 function problems(
     topic: Topic,
     division: Division,
+    defaultTolerance: Tolerance,
     fileToSolutionMap: Record<FileName, Solution>,
 ): Problem[] {
     const folder = topic.toString() + "/" + division
     const result: Problem[] = []
     for (const fileName of Object.keys(fileToSolutionMap)) {
         const solution = fileToSolutionMap[fileName]
-        let tolerance = Tolerance.CaseAndSpaceSensitive
+        let tolerance = defaultTolerance
         let solutions: string[] = []
         if (typeof solution === "object") {
-            tolerance = solution.tolerance
+            tolerance = solution.tolerance ?? defaultTolerance
             solutions = solution.answers
         } else {
             solutions = [solution]
@@ -32,7 +33,7 @@ function problems(
 }
 
 export const ALL_PROBLEMS: Problem[] = [
-    ...problems(Topic.CompNumSystems, "Intermediate", {
+    ...problems(Topic.CompNumSystems, "Intermediate", Tolerance.CaseAndSpaceSensitive, {
         "1.png": "5755",
         "2.png": "86D7",
         "3.png": "6",
@@ -73,12 +74,54 @@ export const ALL_PROBLEMS: Problem[] = [
         "38.png": "101",
         "39.png": "567",
     }),
-    ...problems(Topic.BitStrFlicking, "Intermediate", {
+    // note: some problems excluded because we can't handle complex math exps yet
+    ...problems(Topic.DigitalElec, "Intermediate", Tolerance.CaseSensitive, {
+        "1.png": { answers: ["(*, 1, 1)", "(0, 1, 1)", "(1, 1, 1)"] },
+        "3.png": "4",
+        "4.png": "(1, 0)",
+        "5.png": "XYZ + !Y!Z", 
+        "6.png": "D",
+        "7.png": "(1, 0, 1)",
+        "9.png": "0",
+        "11.png": "B!C",
+        "12.png": { answers: ["(1,0,1)", "(0,0,1)", "(0,1,1)", "(0,1,0)"] },
+        "13.png": { answers: ["(1,0,0)", "(0,0,0)", "(0,1,1)"] },
+        "15.png": { answers: ["(0,0,0)", "(1,0,0)", "(1,1,0)"] },
+        "16.png": "4",
+        "17.png": "A!B!C",
+        "18.png": { answers: ["(1,1,1)", "(0,1,1)", "(0,0,1)"] },
+        "19.png": "ABC",
+        "20.png": "3",
+        "21.png": "!AB!C",
+        "22.png": { answers: ["(0,0,0)", "(0,0,0)", "(0,1,1)"] },
+        "23.png": "0",
+        "24.png": "(1,1,0)",
+        "25.png": "2",
+        "26.png": "!A!B!C!D",
+        "27.png": { answers: ["(1,1,0)", "(0,1,0)", "(0,0,1)"] },
+        "28.png": "(0,0,0)",
+        "29.png": { answers: ["(1,0,1)", "(1,1,1)", "(0,1,1)"] },
+        "30.png": "(1,1,1)",
+        "31.png": "2",
+        "32.png": "D",
+        "33.png": "2",
+        "34.png": "C",
+        "35.png": { answers: ["(1,1,0)", "(0,0,0)", "(0,1,0)"] },
+        "36.png": { answers: ["NONE", "N/A", "Nothing", "Null"], tolerance: Tolerance.Lenient },
+        "37.png": "0",
+        "38.png": { answers: ["(1,1,0)", "(1,0,0)"] },
+        "39.png": "A!BC",
+        "40.png": "!A!BC",
+        "41.png": "(1,1,1)",
+        "42.png": "8",
+        "43.png": "ABC",
+    }),
+    ...problems(Topic.BitStrFlicking, "Intermediate", Tolerance.CaseAndSpaceSensitive, {
         "1.png": "00100",
         "2.png": "0*01*",
         "3.png": "00111"
     }),
-    ...problems(Topic.LISP, "Intermediate", {
+    ...problems(Topic.LISP, "Intermediate", Tolerance.CaseAndSpaceSensitive, {
         "1.png": "40",
         "2.png": "(d f)"
     })
