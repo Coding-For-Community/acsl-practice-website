@@ -11,6 +11,8 @@ import { ALL_CONTEST_TOPICS, DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHE
 import { Leaderboard } from './pages/Leaderboard';
 import { UserStatistics } from './pages/UserStatistics';
 
+const ANON_PLAYER_NAME = "(Anonymous Player)"
+
 export function App() {
   const [topics, setTopics] = useState<Topic[]>([])
   const [division, setDivision] = useState<Division>("Junior")
@@ -40,7 +42,7 @@ export function App() {
   }
   
   const coins = 
-    currentPlayer == null
+    currentPlayer == null || currentPlayer === ANON_PLAYER_NAME
       ? 0
       : sheetsDataQ.data[currentPlayer].totalCoins
   const allTopicsChosen = topics.length === ALL_CONTEST_TOPICS.length
@@ -89,7 +91,7 @@ export function App() {
             searchable
             label="Who are you?"
             labelProps={{ c: "blue", fz: "lg" }}
-            data={allPlayers(sheetsDataQ.data)}
+            data={allPlayers(sheetsDataQ.data).concat(ANON_PLAYER_NAME)}
             value={currentPlayer}
             onChange={value => {
               if (value != null) {
@@ -156,6 +158,7 @@ export function App() {
                   problem={problem} 
                   onSubmit={answer => {
                     setAnswer(answer)
+                    if (currentPlayer === ANON_PLAYER_NAME) return
                     updatePoints(
                       sheetsDataQ.data[currentPlayer!!], 
                       problem!!.topic, 

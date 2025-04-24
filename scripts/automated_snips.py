@@ -6,16 +6,14 @@ Use this to copy down an entire page of ACSL problems and their solutions.
 IMPORTANT: to run this script, run `pip install Pillow` and `pip install pynput` first.
 """ 
 import time
+import keyboard
 from PIL import ImageGrab
-from pynput.keyboard import Controller, Key
 
-keyboard = Controller()
-STARTING_NUM: int = 1
+STARTING_NUM: int = 21
 
 def save_clipboard_image(img_num: int) -> int:
-    keyboard.press(Key.print_screen)
-    keyboard.release(Key.print_screen)
-    time.sleep(6)  # Adjust the interval as needed
+    keyboard.press_and_release('windows+shift+s')
+    keyboard.wait('shift')
     image = ImageGrab.grabclipboard()
     if image:
         filepath = f"{img_num}.png"
