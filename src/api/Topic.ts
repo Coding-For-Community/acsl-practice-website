@@ -2,10 +2,10 @@ import { ComboboxItemGroup } from "@mantine/core"
 
 export enum Topic {
     CompNumSystems = "Computer Number Systems",
-    RecursiveFunctions = "Recursive Functions",
-    WDTPD = "What Does This Program Do?",
+    RecursiveFuncs = "Recursive Functions",
+    WDTPD = "What Does This Program Do",
     PIPNotation = "Prefix/Infix/Postfix Notation",
-    BitStringFlicking = "Bit-String Flicking",
+    BitStrFlicking = "Bit-String Flicking",
     LISP = "LISP",
     BoolAlgebra = "Boolean Algebra",
     DataStructures = "Data Structures",
@@ -20,12 +20,12 @@ export const NON_JUNIOR_DIV_TOPICS = [Topic.LISP, Topic.FSAsAndRegExp, Topic.Ass
 export const CONTEST_TO_TOPIC_MAP: Record<number, Topic[]> = {
     1: [
         Topic.CompNumSystems,
-        Topic.RecursiveFunctions,
+        Topic.RecursiveFuncs,
         Topic.WDTPD,
     ],
     2: [
         Topic.PIPNotation,
-        Topic.BitStringFlicking,
+        Topic.BitStrFlicking,
         Topic.LISP,
     ],
     3: [

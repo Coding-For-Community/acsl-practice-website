@@ -27,7 +27,9 @@ export function UserStatistics(args: UserStatisticsArgs) {
             <Group gap={rem(5)}>
                 <Title order={4} mb={rem(3)}>Topic Scores</Title>
                 <HoverCard>
-                    <HoverCard.Target><Text mb={rem(3)} c="blue">[?]</Text></HoverCard.Target>
+                    <HoverCard.Target>
+                        <Text mb={rem(3)} c="blue">[?]</Text>
+                    </HoverCard.Target>
                     <HoverCard.Dropdown fz="sm" w={rem(250)} p="sm">
                         Your correctness rate for all topics you practiced. 
                         Can be displayed as a fraction(# correct/# attempts)

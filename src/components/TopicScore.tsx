@@ -11,7 +11,14 @@ function TopicScoreImpl(args: {userData: PlayerData, topic: Topic, viewAsPercent
     let evaluatedScore: number = eval(scoreAsStr)
     if (evaluatedScore == null) return null
     const label = args.viewAsPercent ? (Math.round(evaluatedScore * 100) + "%") : scoreAsStr
-    const color = evaluatedScore >= 0.8 ? "green" : evaluatedScore >= 0.6 ? "yellow" : "red"
+    let color = "darkgreen"
+    if (evaluatedScore < 0.5) {
+        color = "red"
+    } else if (evaluatedScore < 0.7) {
+        color = "yellow"
+    } else if (evaluatedScore < 0.85) {
+        color = "green"
+    }
     
     return (
         <Group mt={rem(8)} mb={rem(2)}>

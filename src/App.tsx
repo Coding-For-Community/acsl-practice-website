@@ -1,7 +1,7 @@
 import './App.css'
 import { useState } from 'react'
 import { AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Text, Title } from '@mantine/core';
-import { getRandomProblem, Problem } from './api/Problem';
+import { getRandomProblem, isCorrect, Problem } from './api/Problem';
 import { ALL_DIVISIONS, Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
 import { useQuery } from '@tanstack/react-query';
@@ -43,6 +43,7 @@ export function App() {
     currentPlayer == null
       ? 0
       : sheetsDataQ.data[currentPlayer].totalCoins
+  const allTopicsChosen = topics.length === ALL_CONTEST_TOPICS.length
   let error: QuizError = "ok"
   if (currentPlayer == null) {
     error = "no user"
@@ -125,7 +126,7 @@ export function App() {
           <Chip 
             onClick={() => {
               setAnswer(null)
-              if (topics === ALL_CONTEST_TOPICS) {
+              if (allTopicsChosen) {
                 setTopics([])
                 setProblem(null)
               } else {
@@ -133,7 +134,7 @@ export function App() {
                 setProblem(getRandomProblem(ALL_CONTEST_TOPICS, division))
               }
             }}
-            checked={topics.length === ALL_CONTEST_TOPICS.length}
+            checked={allTopicsChosen}
           >
             Practice Everything
           </Chip>
@@ -158,7 +159,7 @@ export function App() {
                     updatePoints(
                       sheetsDataQ.data[currentPlayer!!], 
                       problem!!.topic, 
-                      answer === problem!!.solution
+                      isCorrect(answer, problem!!),
                     )
                       .then(() => sheetsDataQ.refetch())
                       .then(() => console.log("Points added successfully."))

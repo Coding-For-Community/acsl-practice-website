@@ -10,16 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google-cloud/local-auth": "^2.1.0",
     "@mantine/core": "^7.17.4",
     "@mantine/dates": "^7.17.4",
-    "@mantine/form": "^7.17.4",
     "@mantine/hooks": "^7.17.4",
     "@tanstack/react-query": "^5.73.3",
-    "config.ts": "^1.0.0",
     "dayjs": "^1.11.13",
-    "gapi": "^0.0.3",
-    "googleapis": "^105.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

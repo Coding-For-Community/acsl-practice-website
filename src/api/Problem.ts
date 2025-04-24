@@ -1,11 +1,14 @@
 import { Topic } from "./Topic"
 import { Division } from "./Division"
+import { Tolerance } from "./Tolerance"
+import { ALL_PROBLEMS } from "./allProblems"
 
 export interface Problem {
     imageName: string
-    solution: string,
+    solutions: string[]
     topic: Topic,
-    division: Division
+    division: Division,
+    tolerance: Tolerance
 }
 
 let seenProblems: (Problem | null)[] = [null, null]
@@ -26,35 +29,15 @@ export function getRandomProblem(topics: Topic[], division: Division): Problem |
     return problem
 }
 
-export const ALL_PROBLEMS: Problem[] = [
-    {
-        imageName: "one.png",
-        solution: "00100",
-        topic: Topic.BitStringFlicking,
-        division: "Intermediate"
-    },
-    {
-        imageName: "two.png",
-        solution: "0*01*",
-        topic: Topic.BitStringFlicking,
-        division: "Intermediate"
-    },
-    {
-        imageName: "three.png",
-        solution: "00111",
-        topic: Topic.BitStringFlicking,
-        division: "Intermediate"
-    },
-    {
-        imageName: "four.png",
-        solution: "40",
-        topic: Topic.LISP,
-        division: "Intermediate"
-    },
-    {
-        imageName: "five.png",
-        solution: "(d f)",
-        topic: Topic.AssemblyLang,
-        division: "Intermediate"
+export function isCorrect(answer: string, problem: Problem): boolean {
+    const lowercaseMode = problem.tolerance === Tolerance.Lenient || problem.tolerance === Tolerance.SpaceSensitive
+    const noSpaceMode = problem.tolerance === Tolerance.Lenient || problem.tolerance === Tolerance.CaseSensitive
+    if (lowercaseMode) answer = answer.toLowerCase()
+    if (noSpaceMode) answer = answer.replace(" ", "")
+    for (let solution of problem.solutions) {
+        if (lowercaseMode) solution = solution.toLowerCase()
+        if (noSpaceMode) solution = solution.replace(" ", "")
+        if (solution === answer) return true
     }
-]
+    return false
+}
