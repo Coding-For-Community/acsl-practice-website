@@ -1,3 +1,10 @@
+"""
+This script creates the correct folder organization within your project
+for ACSL problems/solutions.
+
+Run this script once when you fork this repo from git, allowing you to add problem/solution
+images later.
+"""
 import os
 
 # Paths for contest problems and solutions

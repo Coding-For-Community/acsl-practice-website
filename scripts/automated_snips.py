@@ -1,10 +1,16 @@
-# to run this script, run `pip install Pillow` and `pip install pynput` first.
+"""
+This is a script that allows you to take a lot of snips at once, while saving them as images
+within this directory.
+Use this to copy down an entire page of ACSL problems and their solutions.
+
+IMPORTANT: to run this script, run `pip install Pillow` and `pip install pynput` first.
+""" 
 import time
 from PIL import ImageGrab
 from pynput.keyboard import Controller, Key
 
 keyboard = Controller()
-STARTING_NUM: int = 34
+STARTING_NUM: int = 1
 
 def save_clipboard_image(img_num: int) -> int:
     keyboard.press(Key.print_screen)
