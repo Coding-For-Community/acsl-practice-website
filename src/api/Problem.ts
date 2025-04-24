@@ -30,13 +30,14 @@ export function getRandomProblem(topics: Topic[], division: Division): Problem |
 }
 
 export function isCorrect(answer: string, problem: Problem): boolean {
+    answer = answer.trim()
     const lowercaseMode = problem.tolerance === Tolerance.Lenient || problem.tolerance === Tolerance.SpaceSensitive
     const noSpaceMode = problem.tolerance === Tolerance.Lenient || problem.tolerance === Tolerance.CaseSensitive
     if (lowercaseMode) answer = answer.toLowerCase()
-    if (noSpaceMode) answer = answer.replace(" ", "")
+    if (noSpaceMode) answer = answer.replace(/ /g, "")
     for (let solution of problem.solutions) {
         if (lowercaseMode) solution = solution.toLowerCase()
-        if (noSpaceMode) solution = solution.replace(" ", "")
+        if (noSpaceMode) solution = solution.replace(/ /g, "")
         if (solution === answer) return true
     }
     return false

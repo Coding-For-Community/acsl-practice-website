@@ -33,10 +33,10 @@ function problems(
 
 export const ALL_PROBLEMS: Problem[] = [
     ...problems(Topic.CompNumSystems, "Intermediate", {
-        "1.png": "5755",
-        "2.png": "86D7",
-        "3.png": "6",
-        "4.png": "5",
+        // "1.png": "5755",
+        // "2.png": "86D7",
+        // "3.png": "6",
+        // "4.png": "5",
         // "5.png": "526",
         // "6.png": "750220",
         // "7.png": "C",
@@ -47,7 +47,7 @@ export const ALL_PROBLEMS: Problem[] = [
         // "12.png": "10357",
         // "13.png": { answers: ["C", "124"], tolerance: Tolerance.Lenient },
         // "14.png": "77",
-        // "15.png": { answers: ["C, B, A, D"], tolerance: Tolerance.Lenient },
+        "15.png": { answers: ["C, B, A, D"], tolerance: Tolerance.Lenient },
         // "16.png": "24256142326",
         // "17.png": "11",
         // "18.png": "1",
