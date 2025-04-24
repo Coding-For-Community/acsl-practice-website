@@ -184,7 +184,11 @@ export function App() {
       <UserStatistics
         open={statsOpen} 
         close={() => setStatsOpen(false)} 
-        playerData={currentPlayer == null ? null : sheetsDataQ.data[currentPlayer]}
+        playerData={
+          currentPlayer == null || currentPlayer === ANON_PLAYER_NAME 
+            ? null 
+            : sheetsDataQ.data[currentPlayer]
+        }
       />
 
       <Leaderboard 

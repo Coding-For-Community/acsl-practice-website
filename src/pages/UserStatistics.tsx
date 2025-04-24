@@ -2,15 +2,16 @@ import { Divider, Drawer, Group, HoverCard, rem, Switch, Text, Title } from "@ma
 import { PlayerData } from "../api/api"
 import { ALL_CONTEST_TOPICS } from "../api/Topic"
 import { TopicScore } from "../components/TopicScore"
-import { useState } from "react"
+import { memo, useState } from "react"
 
+export const UserStatistics = memo(UserStatisticsImpl)
 export interface UserStatisticsArgs {
     open: boolean
     close: () => void
     playerData: PlayerData | null
 }
 
-export function UserStatistics(args: UserStatisticsArgs) {
+function UserStatisticsImpl(args: UserStatisticsArgs) {
     const data = args.playerData
     if (data == null) return <></>
     const [viewAsPercent, setViewAsPercent] = useState(false)
