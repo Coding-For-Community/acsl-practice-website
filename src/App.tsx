@@ -1,6 +1,6 @@
 import './App.css'
 import { useState } from 'react'
-import { AppShell, Button, Chip, Group, Image, List, Loader, Modal, MultiSelect, rem, Select, Text, Title } from '@mantine/core';
+import { AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Text, Title } from '@mantine/core';
 import { getRandomProblem, isCorrect, Problem } from './api/Problem';
 import { ALL_DIVISIONS, Division } from "./api/Division";
 import { Quiz, QuizError } from './pages/Quiz';
@@ -14,7 +14,6 @@ import { UserStatistics } from './pages/UserStatistics';
 const ANON_PLAYER_NAME = "ANONYMOUS PLAYER"
 
 export function App() {
-  const [warningOpen, setWarningOpen] = useState(true)
   const [topics, setTopics] = useState<Topic[]>([])
   const [division, setDivision] = useState<Division>("Junior")
   const [problem, setProblem] = useState<Problem | null>(null)
@@ -42,10 +41,10 @@ export function App() {
     )
   }
   
-  const coins = 
-    currentPlayer == null || currentPlayer === ANON_PLAYER_NAME
-      ? 0
-      : sheetsDataQ.data[currentPlayer].totalCoins
+  const playerData = 
+    currentPlayer == null || currentPlayer === ANON_PLAYER_NAME 
+      ? null 
+      : sheetsDataQ.data[currentPlayer]
   const allTopicsChosen = topics.length === ALL_CONTEST_TOPICS.length
   let error: QuizError = "ok"
   if (currentPlayer == null) {
@@ -81,14 +80,14 @@ export function App() {
               fw="bold"
               fz="lg"
             >
-              {coins} Coins
+              {playerData?.totalCoins ?? 0} Coins
             </Text>
           </Group>
         </AppShell.Header>
 
         <AppShell.Navbar px={rem(15)}>
           <Select
-            my={rem(15)}
+            mt={rem(15)}
             searchable
             label="Who are you?"
             labelProps={{ c: "blue", fz: "lg" }}
@@ -101,6 +100,7 @@ export function App() {
               }
             }}
           />
+          <Text size="xs" c="gray" mb={rem(15)}>Dont see your name? Choose "ANONYMOUS PLAYER".</Text>
           <Select 
             mb={rem(15)}
             label="Choose division"
@@ -159,9 +159,9 @@ export function App() {
                   problem={problem} 
                   onSubmit={answer => {
                     setAnswer(answer)
-                    if (currentPlayer === ANON_PLAYER_NAME) return
+                    if (playerData == null) return
                     updatePoints(
-                      sheetsDataQ.data[currentPlayer!!], 
+                      playerData, 
                       problem!!.topic, 
                       isCorrect(answer, problem!!),
                     )
@@ -184,38 +184,15 @@ export function App() {
       <UserStatistics
         open={statsOpen} 
         close={() => setStatsOpen(false)} 
-        playerData={
-          currentPlayer == null || currentPlayer === ANON_PLAYER_NAME 
-            ? null 
-            : sheetsDataQ.data[currentPlayer]
-        }
+        playerData={playerData}
       />
 
       <Leaderboard 
         open={leaderboardOpen} 
         close={() => setLeaderboardOpen(false)} 
-        playerData={sheetsDataQ.data} 
+        allPlayersData={sheetsDataQ.data} 
         currentPlayer={currentPlayer} 
       />
-
-      <Modal opened={warningOpen} onClose={() => setWarningOpen(false)} size="lg">
-        <Title order={4}>Important stuff before starting</Title>
-        <List w={rem(550)}>
-          <List.Item>
-            For Digital Elec/Boolean Alg questions which have multiple answers 
-            that satisfy the conditions given in the problem,
-            only enter ONE answer.
-          </List.Item>
-          <List.Item>
-            For instance, if the tuples (0, 1, 1) and (1, 0, 1) satisfy the conditions given in the problem,
-            only answer (0, 1, 1) OR (1, 0, 1). Do not answer both(separated by commas or anything like that sort).
-          </List.Item>
-          <List.Item>
-            If you want to earn points, ask an ACSL leader to register you.
-            Otherwise, choose the "ANONYMOUS PLAYER" option.   
-          </List.Item>  
-        </List>
-      </Modal>
     </div>
   )
 }

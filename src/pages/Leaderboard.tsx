@@ -10,7 +10,7 @@ export const Leaderboard = memo(LeaderboardImpl)
 export interface LeaderboardArgs {
     open: boolean
     close: () => void
-    playerData: AllPlayersData
+    allPlayersData: AllPlayersData
     currentPlayer: string | null
 }
 
@@ -25,7 +25,7 @@ function LeaderboardImpl(args: LeaderboardArgs) {
             title={<Title order={2} c="blue">Leaderboard</Title>}
         >
             {
-                Object.entries(args.playerData)
+                Object.entries(args.allPlayersData)
                     .sort((a, b) => -a[1].totalCoins + b[1].totalCoins) // sorts off points in descending order
                     .map(([name, data], index) => (
                         <PlayerRank 

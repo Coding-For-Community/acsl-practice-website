@@ -9,7 +9,7 @@ function TopicScoreImpl(args: {userData: PlayerData, topic: Topic, viewAsPercent
     const scoreAsStr = args.userData.statistics[args.topic]
     if (scoreAsStr == null) return null
     let evaluatedScore: number = eval(scoreAsStr)
-    if (evaluatedScore == null) return null
+    if (evaluatedScore == null || evaluatedScore <= 0) return null
     const label = args.viewAsPercent ? (Math.round(evaluatedScore * 100) + "%") : scoreAsStr
     let color = "darkgreen"
     if (evaluatedScore < 0.5) {

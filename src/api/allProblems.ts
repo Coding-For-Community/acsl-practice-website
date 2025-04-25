@@ -76,12 +76,12 @@ export const ALL_PROBLEMS: Problem[] = [
     }),
     // note: some problems excluded because we can't handle complex math exps yet
     ...problems(Topic.DigitalElec, "Intermediate", Tolerance.CaseSensitive, {
-        "1.png": { answers: ["(*, 1, 1)", "(0, 1, 1)", "(1, 1, 1)"] },
+        "1.png": { answers: ["(0,1,1)", "(1,1,1)"] },
         "3.png": "4",
-        "4.png": "(1, 0)",
+        "4.png": "(1,0)",
         "5.png": "XYZ + !Y!Z", 
         "6.png": "D",
-        "7.png": "(1, 0, 1)",
+        "7.png": "(1,0,1)",
         "9.png": "0",
         "11.png": "B!C",
         "12.png": { answers: ["(1,0,1)", "(0,0,1)", "(0,1,1)", "(0,1,0)"] },

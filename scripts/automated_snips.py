@@ -3,13 +3,13 @@ This is a script that allows you to take a lot of snips at once, while saving th
 within this directory.
 Use this to copy down an entire page of ACSL problems and their solutions.
 
-IMPORTANT: to run this script, run `pip install Pillow` and `pip install pynput` first.
+IMPORTANT: to run this script, run `pip install Pillow` and `pip install keyboard` first.
 """ 
 import time
 import keyboard
 from PIL import ImageGrab
 
-STARTING_NUM: int = 21
+STARTING_NUM: int = 1
 
 def save_clipboard_image(img_num: int) -> int:
     keyboard.press_and_release('windows+shift+s')
