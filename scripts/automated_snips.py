@@ -5,13 +5,13 @@ Use this to copy down an entire page of ACSL problems and their solutions.
 
 IMPORTANT: to run this script, run `pip install Pillow` and `pip install keyboard` first.
 """ 
-import time
+
 import keyboard
 from PIL import ImageGrab
 
 STARTING_NUM: int = 1
 
-def save_clipboard_image(img_num: int) -> int:
+def save_clipboard_image(img_num: int) -> bool:
     keyboard.press_and_release('windows+shift+s')
     keyboard.wait('shift')
     image = ImageGrab.grabclipboard()
@@ -19,13 +19,13 @@ def save_clipboard_image(img_num: int) -> int:
         filepath = f"{img_num}.png"
         image.save(filepath)
         print(f"Image saved: {filepath}")
-        return img_num + 1
+        return True
     else:
         print("No image found in clipboard.")
-        return img_num
+        return False
 
 if __name__ == "__main__":
-    time.sleep(5)
     curr_num: int = STARTING_NUM
+    keyboard.wait('shift')
     while True:
-        curr_num = save_clipboard_image(curr_num)
+        curr_num += save_clipboard_image(curr_num)
