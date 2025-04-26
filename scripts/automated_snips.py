@@ -5,6 +5,7 @@ Use this to copy down an entire page of ACSL problems and their solutions.
 
 IMPORTANT: to run this script, run `pip install Pillow` and `pip install keyboard` first.
 """ 
+
 import keyboard
 from PIL import ImageGrab
 
