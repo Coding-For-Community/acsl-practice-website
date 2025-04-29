@@ -124,5 +124,30 @@ export const ALL_PROBLEMS: Problem[] = [
     ...problems(Topic.LISP, "Intermediate", Tolerance.CaseAndSpaceSensitive, {
         "1.png": "40",
         "2.png": "(d f)"
+    }),
+    ...problems(Topic.GraphTheory, "Intermediate", Tolerance.Lenient, {
+        "1.png": "13",
+        "2.png": "B",
+        "3.png": "C",
+        "5.png": "9",
+        "6.png": "19",
+        "8.png": "1",
+        "9.png": "7",
+        "11.png": "11",
+        "12.png": "6",
+        "13.png": "7",
+        "14.png": "4",
+        "16.png": "7",
+        "17.png": "8",
+        "18.png": "6",
+        // TODO find out 19.png
+        "20.png": "9",
+        "22.png": "32",
+        "24.png": "20",
+        "25.png": "2",
+        "26.png": "64",
+        "28.png": "23",
+        "30.png": "8",
+        "32.png": "AB,CB,DB"
     })
 ]
