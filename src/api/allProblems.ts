@@ -148,6 +148,6 @@ export const ALL_PROBLEMS: Problem[] = [
         "26.png": "64",
         "28.png": "23",
         "30.png": "8",
-        "32.png": "AB,CB,DB"
+        "32.png": {answers: ["AB,CB,DB", "AB,DB,CB", "CB,AB,DB", "CB,DB,AB", "DB,AB,CB", "DB,CB,AB"] }
     })
 ]
