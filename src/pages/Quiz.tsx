@@ -33,7 +33,7 @@ export function Quiz(args: QuizArgs) {
             {
                 args.problem != null && 
                 <Image 
-                    src={`/src/assets/contest-problems/${args.problem.imageName}`} 
+                    src={`contest-problems/${args.problem.imageName}`} 
                     alt="Problem Image" 
                     w={rem(600)}
                     fit="contain"
