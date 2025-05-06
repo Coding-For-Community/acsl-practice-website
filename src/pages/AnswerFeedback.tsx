@@ -12,19 +12,19 @@ export function AnswerFeedback(args: {problem: Problem, userAnswer: string, onCo
 
     return (
         <div>
-            <Title order={3} mb={rem(10)} c={correct ? "green" : "red"}>{msg}</Title>
-            <Text mb={rem(5)}>Solution: </Text>
+            <Title order={3} mb={rem(15)} c={correct ? "green" : "red"}>{msg}</Title>
+            <Text mb={rem(5)} td="underline">Solution: </Text>
             <Image 
-                src={`/src/assets/contest-solutions/${args.problem.imageName}`} 
+                src={`contest-solutions/${args.problem.imageName}`} 
                 alt="Problem Solution Image" 
                 h="auto"
                 fit="contain"
                 w={rem(600)}
                 mb={rem(5)}
             />
-            <Text mb={rem(5)}>Problem: </Text>
+            <Text mb={rem(5)} td="underline">Problem: </Text>
             <Image 
-                src={`/src/assets/contest-problems/${args.problem.imageName}`} 
+                src={`contest-problems/${args.problem.imageName}`} 
                 alt="Problem Image" 
                 h="auto"
                 fit="contain"
