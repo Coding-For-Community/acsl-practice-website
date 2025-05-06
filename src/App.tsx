@@ -11,7 +11,7 @@ import { ALL_CONTEST_TOPICS, DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHE
 import { Leaderboard } from './pages/Leaderboard';
 import { UserStatistics } from './pages/UserStatistics';
 
-const ANON_PLAYER_NAME = "ANONYMOUS PLAYER"
+const ANON_PLAYER_NAME = "ANONYMOUS PLAYER" // testing
 
 export function App() {
   const [topics, setTopics] = useState<Topic[]>([])
@@ -68,9 +68,10 @@ export function App() {
         <AppShell.Header>
           <Group mt={rem(15)} ml={rem(14)} gap={rem(10)}>
             <Image
-              src="/src/assets/ca-icon.png"
+              src="ca-icon.png"
               alt="logo"
               h={rem(30)}
+              w={rem(30)}
             />
             <Title order={3}>CA ACSL practice website</Title>
             <Text 
@@ -145,7 +146,10 @@ export function App() {
             <Button onClick={() => setStatsOpen(true)}>
               Your Statistics
             </Button>
-            <Button color="yellow" onClick={() => setLeaderboardOpen(true)}>
+            <Button color="yellow" onClick={() => {
+              setLeaderboardOpen(true)
+              console.log("Leaderboard OPEN: " + leaderboardOpen)
+            }}>
               Leaderboard
             </Button>
           </Group>
