@@ -1,15 +1,32 @@
-import './App.css'
-import { useState } from 'react'
-import { AppShell, Button, Chip, Group, Image, Loader, MultiSelect, rem, Select, Text, Title } from '@mantine/core';
-import { getRandomProblem, isCorrect, Problem } from './api/Problem';
-import { ALL_DIVISIONS, Division } from "./api/Division";
-import { Quiz, QuizError } from './pages/Quiz';
-import { useQuery } from '@tanstack/react-query';
-import { allPlayers, fetchAllPlayerData, updatePoints } from './api/api';
-import { AnswerFeedback } from './pages/AnswerFeedback';
-import { ALL_CONTEST_TOPICS, DIVISION_SELECT_SCHEMA, JUNIOR_DIVISION_SELECT_SCHEMA, Topic } from './api/Topic';
-import { Leaderboard } from './pages/Leaderboard';
-import { UserStatistics } from './pages/UserStatistics';
+import "./App.css"
+import { useState } from "react"
+import {
+  AppShell,
+  Button,
+  Chip,
+  Group,
+  Image,
+  Loader,
+  MultiSelect,
+  rem,
+  Select,
+  Text,
+  Title,
+} from "@mantine/core"
+import { getRandomProblem, isCorrect, Problem } from "./api/Problem"
+import { ALL_DIVISIONS, Division } from "./api/Division"
+import { Quiz, QuizError } from "./pages/Quiz"
+import { useQuery } from "@tanstack/react-query"
+import { allPlayers, fetchAllPlayerData, updatePoints } from "./api/api"
+import { AnswerFeedback } from "./pages/AnswerFeedback"
+import {
+  ALL_CONTEST_TOPICS,
+  DIVISION_SELECT_SCHEMA,
+  JUNIOR_DIVISION_SELECT_SCHEMA,
+  Topic,
+} from "./api/Topic"
+import { Leaderboard } from "./pages/Leaderboard"
+import { UserStatistics } from "./pages/UserStatistics"
 
 const ANON_PLAYER_NAME = "ANONYMOUS PLAYER" // testing
 
@@ -18,15 +35,15 @@ export function App() {
   const [division, setDivision] = useState<Division>("Junior")
   const [problem, setProblem] = useState<Problem | null>(null)
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(null)
-  const [answer, setAnswer] = useState<string | null>(null) 
+  const [answer, setAnswer] = useState<string | null>(null)
 
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
   const [statsOpen, setStatsOpen] = useState(false)
-  
+
   const sheetsDataQ = useQuery({
-    queryKey: ['googleSheetsData'],
+    queryKey: ["googleSheetsData"],
     queryFn: fetchAllPlayerData,
-    staleTime: Infinity
+    staleTime: Infinity,
   })
 
   if (!sheetsDataQ.isSuccess) {
@@ -40,10 +57,10 @@ export function App() {
       </Group>
     )
   }
-  
-  const playerData = 
-    currentPlayer == null || currentPlayer === ANON_PLAYER_NAME 
-      ? null 
+
+  const playerData =
+    currentPlayer == null || currentPlayer === ANON_PLAYER_NAME
+      ? null
       : sheetsDataQ.data[currentPlayer]
   const allTopicsChosen = topics.length === ALL_CONTEST_TOPICS.length
   let error: QuizError = "ok"
@@ -61,26 +78,15 @@ export function App() {
         header={{ height: rem(60) }}
         navbar={{
           width: rem(325),
-          breakpoint: 'sm'
+          breakpoint: "sm",
         }}
         padding="md"
       >
         <AppShell.Header>
           <Group mt={rem(15)} ml={rem(14)} gap={rem(10)}>
-            <Image
-              src="ca-icon.png"
-              alt="logo"
-              h={rem(30)}
-              w={rem(30)}
-            />
+            <Image src="ca-icon.png" alt="logo" h={rem(30)} w={rem(30)} />
             <Title order={3}>CA ACSL practice website</Title>
-            <Text 
-              ml="auto" 
-              mr={rem(14)} 
-              c="blue" 
-              fw="bold"
-              fz="lg"
-            >
+            <Text ml="auto" mr={rem(14)} c="blue" fw="bold" fz="lg">
               {playerData?.totalCoins ?? 0} Coins
             </Text>
           </Group>
@@ -101,33 +107,39 @@ export function App() {
               }
             }}
           />
-          <Text size="xs" c="gray" mb={rem(15)}>Dont see your name? Choose "ANONYMOUS PLAYER".</Text>
-          <Select 
+          <Text size="xs" c="gray" mb={rem(15)}>
+            Dont see your name? Choose "ANONYMOUS PLAYER".
+          </Text>
+          <Select
             mb={rem(15)}
             label="Choose division"
             data={ALL_DIVISIONS}
             value={division}
-            onChange={value => { 
-              if (value != null) { 
+            onChange={value => {
+              if (value != null) {
                 setAnswer(null)
-                setDivision(value as Division) 
+                setDivision(value as Division)
                 setProblem(getRandomProblem(topics, value as Division))
-              } 
+              }
             }}
           />
-          <MultiSelect 
+          <MultiSelect
             mb={rem(10)}
-            label="Choose topics to practice" 
-            data={division === "Junior" ? JUNIOR_DIVISION_SELECT_SCHEMA : DIVISION_SELECT_SCHEMA}
+            label="Choose topics to practice"
+            data={
+              division === "Junior"
+                ? JUNIOR_DIVISION_SELECT_SCHEMA
+                : DIVISION_SELECT_SCHEMA
+            }
             value={topics}
             clearable
             onChange={values => {
               setAnswer(null)
               setTopics(values as Topic[])
               setProblem(getRandomProblem(values as Topic[], division))
-            }} 
+            }}
           />
-          <Chip 
+          <Chip
             onClick={() => {
               setAnswer(null)
               if (allTopicsChosen) {
@@ -142,60 +154,64 @@ export function App() {
           >
             Practice Everything
           </Chip>
-          <Group gap={rem(15)} style={{position: "absolute", bottom: rem(15), left: rem(15)}}>
-            <Button onClick={() => setStatsOpen(true)}>
-              Your Statistics
-            </Button>
-            <Button color="yellow" onClick={() => {
-              setLeaderboardOpen(true)
-              console.log("Leaderboard OPEN: " + leaderboardOpen)
-            }}>
+          <Group
+            gap={rem(15)}
+            style={{ position: "absolute", bottom: rem(15), left: rem(15) }}
+          >
+            <Button onClick={() => setStatsOpen(true)}>Your Statistics</Button>
+            <Button
+              color="yellow"
+              onClick={() => {
+                setLeaderboardOpen(true)
+                console.log("Leaderboard OPEN: " + leaderboardOpen)
+              }}
+            >
               Leaderboard
             </Button>
           </Group>
         </AppShell.Navbar>
 
         <AppShell.Main>
-          {
-            answer == null || problem == null
-              ? <Quiz 
-                  error={error}
-                  problem={problem} 
-                  onSubmit={answer => {
-                    setAnswer(answer)
-                    if (playerData == null) return
-                    updatePoints(
-                      playerData, 
-                      problem!!.topic, 
-                      isCorrect(answer, problem!!),
-                    )
-                      .then(() => sheetsDataQ.refetch())
-                      .then(() => console.log("Points added successfully."))
-                  }} 
-                />
-              : <AnswerFeedback 
-                  problem={problem}
-                  userAnswer={answer}
-                  onContinue={() => {
-                    setAnswer(null)
-                    setProblem(getRandomProblem(topics, division))
-                  }}
-                />
-          }
+          {answer == null || problem == null ? (
+            <Quiz
+              error={error}
+              problem={problem}
+              onSubmit={answer => {
+                setAnswer(answer)
+                if (playerData == null) return
+                updatePoints(
+                  playerData,
+                  problem!!.topic,
+                  isCorrect(answer, problem!!),
+                )
+                  .then(() => sheetsDataQ.refetch())
+                  .then(() => console.log("Points added successfully."))
+              }}
+            />
+          ) : (
+            <AnswerFeedback
+              problem={problem}
+              userAnswer={answer}
+              onContinue={() => {
+                setAnswer(null)
+                setProblem(getRandomProblem(topics, division))
+              }}
+            />
+          )}
         </AppShell.Main>
       </AppShell>
 
       <UserStatistics
-        open={statsOpen} 
-        close={() => setStatsOpen(false)} 
+        open={statsOpen}
+        close={() => setStatsOpen(false)}
         playerData={playerData}
       />
 
-      <Leaderboard 
-        open={leaderboardOpen} 
-        close={() => setLeaderboardOpen(false)} 
-        allPlayersData={sheetsDataQ.data} 
-        currentPlayer={currentPlayer} 
+      <Leaderboard
+        open={leaderboardOpen}
+        close={() => setLeaderboardOpen(false)}
+        allPlayersData={sheetsDataQ.data}
+        currentPlayer={currentPlayer}
       />
     </div>
   )
