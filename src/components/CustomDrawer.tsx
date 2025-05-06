@@ -1,4 +1,4 @@
-import { Drawer, rem } from "@mantine/core";
+import { Drawer, rem } from "@mantine/core"
 
 /**
  * A custom drawer component with styling that we need
@@ -8,10 +8,10 @@ export const CustomDrawer = Drawer.withProps({
     title: {
       color: "var(--mantine-color-blue-5)",
       fontWeight: "bold",
-      fontSize: rem(24)
-    }
+      fontSize: rem(24),
+    },
   },
   padding: rem(15),
   size: "md",
-  position: "right"
+  position: "right",
 })
