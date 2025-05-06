@@ -17,7 +17,7 @@ export function AnswerFeedback(args: FeedbackArgs) {
   useHotkeys([["Enter", args.onContinue]]) // allows user to press enter to continue
 
   return (
-    <div>
+    <div style={{ maxWidth: rem(600), minWidth: rem(300) }}>
       <Title order={3} mb={rem(15)} c={correct ? "green" : "red"}>
         {msg}
       </Title>
@@ -29,7 +29,6 @@ export function AnswerFeedback(args: FeedbackArgs) {
         alt="Problem Solution Image"
         h="auto"
         fit="contain"
-        w={rem(600)}
         mb={rem(5)}
       />
       <Text mb={rem(5)} td="underline">
@@ -40,7 +39,6 @@ export function AnswerFeedback(args: FeedbackArgs) {
         alt="Problem Image"
         h="auto"
         fit="contain"
-        w={rem(600)}
         mb={rem(5)}
       />
       <Button color={correct ? "green" : "gray"} onClick={args.onContinue}>
