@@ -37,11 +37,9 @@ export function getRandomProblem(
 export function isCorrect(answer: string, problem: Problem): boolean {
   answer = answer.trim()
   const lowercaseMode =
-    problem.tolerance === Tolerance.Lenient ||
-    problem.tolerance === Tolerance.SpaceSensitive
+    problem.tolerance === "Lenient" || problem.tolerance === "SpaceSensitive"
   const noSpaceMode =
-    problem.tolerance === Tolerance.Lenient ||
-    problem.tolerance === Tolerance.CaseSensitive
+    problem.tolerance === "Lenient" || problem.tolerance === "CaseSensitive"
   if (lowercaseMode) answer = answer.toLowerCase()
   if (noSpaceMode) answer = answer.replace(/ /g, "")
   for (let solution of problem.solutions) {

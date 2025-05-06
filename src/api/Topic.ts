@@ -1,5 +1,7 @@
 import { ComboboxItemGroup } from "@mantine/core"
 
+// We use a enum here so we can have less verbose topics 
+// while having more verbose string representations of them
 export enum Topic {
   CompNumSystems = "Computer Number Systems",
   RecursiveFuncs = "Recursive Functions",

@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "fmt": "npx prettier . --write"
+    "fmt": "npx prettier . --write && git add --renormalize ."
   },
   "dependencies": {
     "@mantine/core": "^8.0.0",
