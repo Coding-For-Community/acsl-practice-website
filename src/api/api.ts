@@ -27,7 +27,6 @@ export async function fetchAllPlayerData(): Promise<AllPlayersData> {
     let playerIdx = 0
     for (const row of values) {
         const playerName = row[0]
-        console.log(row[1])
         const coins = row[1] == null ? 0 : parseInt(row[1])
         const statistics: Partial<Record<Topic, string>> = {}
         for (let i = 0; i < ALL_CONTEST_TOPICS.length; i++) {
@@ -40,7 +39,6 @@ export async function fetchAllPlayerData(): Promise<AllPlayersData> {
         }
         playerIdx++
     }
-    console.log("final data: " + JSON.stringify(finalData))
     return finalData
 }
 

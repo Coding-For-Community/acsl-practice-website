@@ -146,7 +146,10 @@ export function App() {
             <Button onClick={() => setStatsOpen(true)}>
               Your Statistics
             </Button>
-            <Button color="yellow" onClick={() => setLeaderboardOpen(true)}>
+            <Button color="yellow" onClick={() => {
+              setLeaderboardOpen(true)
+              console.log("Leaderboard OPEN: " + leaderboardOpen)
+            }}>
               Leaderboard
             </Button>
           </Group>
