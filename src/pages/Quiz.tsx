@@ -29,12 +29,11 @@ export function Quiz(args: QuizArgs) {
       break
   }
   return (
-    <div>
+    <div style={{ maxWidth: rem(600), minWidth: rem(300) }}>
       {args.problem != null && (
         <Image
           src={`contest-problems/${args.problem.imageName}`}
           alt="Problem Image"
-          w={rem(600)}
           fit="contain"
           h="auto"
         />
@@ -43,7 +42,6 @@ export function Quiz(args: QuizArgs) {
         label="Answer: "
         placeholder="Type Here"
         mb={10}
-        w={rem(600)}
         value={answer}
         onChange={event => setAnswer(event.currentTarget.value)}
         onKeyDown={getHotkeyHandler([["Enter", () => args.onSubmit(answer)]])}
@@ -65,7 +63,6 @@ export function Quiz(args: QuizArgs) {
           color="blue"
           title="Notice:"
           icon={<Info />}
-          w={rem(600)}
         >
           <Text fz="xs">
             For Digital Elec/Boolean Alg questions which have multiple answers
