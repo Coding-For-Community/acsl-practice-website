@@ -19,10 +19,10 @@ export function Quiz(args: QuizArgs) {
   let errMsg: string | null = null
   switch (args.error) {
     case "no user":
-      errMsg = "Please tell us who you are (select your name)."
+      errMsg = "No user specified. (On the left panel; on small screens, click the menu icon to open it)"
       break
     case "no topic":
-      errMsg = "Please select a topic to answer questions."
+      errMsg = "No topics have been chosen. (On the left panel; on small screens, click the menu icon to open it)"
       break
     case "no questions":
       errMsg = "No questions fit the criteria given."

@@ -2,6 +2,7 @@ import "./App.css"
 import { useState } from "react"
 import {
   AppShell,
+  Burger,
   Button,
   Chip,
   Group,
@@ -9,6 +10,7 @@ import {
   Loader,
   MultiSelect,
   rem,
+  ScrollArea,
   Select,
   Text,
   Title,
@@ -37,6 +39,7 @@ export function App() {
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(null)
   const [answer, setAnswer] = useState<string | null>(null)
 
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
   const [statsOpen, setStatsOpen] = useState(false)
 
@@ -79,11 +82,18 @@ export function App() {
         navbar={{
           width: rem(325),
           breakpoint: "sm",
+          collapsed: { mobile: !sidebarOpen }
         }}
         padding="md"
       >
         <AppShell.Header>
           <Group mt={rem(15)} ml={rem(14)} gap={rem(10)}>
+            <Burger 
+              hiddenFrom="sm" 
+              size="sm"
+              opened={sidebarOpen} 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            />
             <Image src="ca-icon.png" alt="logo" h={rem(30)} w={rem(30)} />
             <Title order={3}>CA ACSL practice website</Title>
             <Text ml="auto" mr={rem(14)} c="blue" fw="bold" fz="lg">
@@ -92,68 +102,71 @@ export function App() {
           </Group>
         </AppShell.Header>
 
-        <AppShell.Navbar px={rem(15)}>
-          <Select
-            mt={rem(15)}
-            searchable
-            label="Who are you?"
-            labelProps={{ c: "blue", fz: "lg" }}
-            data={[ANON_PLAYER_NAME].concat(allPlayers(sheetsDataQ.data))}
-            value={currentPlayer}
-            onChange={value => {
-              if (value != null) {
+        <AppShell.Navbar>
+          <ScrollArea type="auto" px={rem(15)}>
+            <Select
+              mt={rem(15)}
+              searchable
+              label="Who are you?"
+              labelProps={{ c: "blue", fz: "lg" }}
+              data={[ANON_PLAYER_NAME].concat(allPlayers(sheetsDataQ.data))}
+              value={currentPlayer}
+              onChange={value => {
+                if (value != null) {
+                  setAnswer(null)
+                  setCurrentPlayer(value)
+                }
+              }}
+            />
+            <Text size="xs" c="gray" mb={rem(15)}>
+              Dont see your name? Choose "ANONYMOUS PLAYER".
+            </Text>
+            <Select
+              mb={rem(15)}
+              label="Choose division"
+              data={ALL_DIVISIONS}
+              value={division}
+              onChange={value => {
+                if (value != null) {
+                  setAnswer(null)
+                  setDivision(value as Division)
+                  setProblem(getRandomProblem(topics, value as Division))
+                }
+              }}
+            />
+            <MultiSelect
+              mb={rem(10)}
+              label="Choose topics to practice"
+              data={
+                division === "Junior"
+                  ? JUNIOR_DIVISION_SELECT_SCHEMA
+                  : DIVISION_SELECT_SCHEMA
+              }
+              value={topics}
+              clearable
+              onChange={values => {
                 setAnswer(null)
-                setCurrentPlayer(value)
-              }
-            }}
-          />
-          <Text size="xs" c="gray" mb={rem(15)}>
-            Dont see your name? Choose "ANONYMOUS PLAYER".
-          </Text>
-          <Select
-            mb={rem(15)}
-            label="Choose division"
-            data={ALL_DIVISIONS}
-            value={division}
-            onChange={value => {
-              if (value != null) {
+                setTopics(values as Topic[])
+                setProblem(getRandomProblem(values as Topic[], division))
+              }}
+            />
+            <Chip
+              onClick={() => {
                 setAnswer(null)
-                setDivision(value as Division)
-                setProblem(getRandomProblem(topics, value as Division))
-              }
-            }}
-          />
-          <MultiSelect
-            mb={rem(10)}
-            label="Choose topics to practice"
-            data={
-              division === "Junior"
-                ? JUNIOR_DIVISION_SELECT_SCHEMA
-                : DIVISION_SELECT_SCHEMA
-            }
-            value={topics}
-            clearable
-            onChange={values => {
-              setAnswer(null)
-              setTopics(values as Topic[])
-              setProblem(getRandomProblem(values as Topic[], division))
-            }}
-          />
-          <Chip
-            onClick={() => {
-              setAnswer(null)
-              if (allTopicsChosen) {
-                setTopics([])
-                setProblem(null)
-              } else {
-                setTopics(ALL_CONTEST_TOPICS)
-                setProblem(getRandomProblem(ALL_CONTEST_TOPICS, division))
-              }
-            }}
-            checked={allTopicsChosen}
-          >
-            Practice Everything
-          </Chip>
+                if (allTopicsChosen) {
+                  setTopics([])
+                  setProblem(null)
+                } else {
+                  setTopics(ALL_CONTEST_TOPICS)
+                  setProblem(getRandomProblem(ALL_CONTEST_TOPICS, division))
+                }
+              }}
+              checked={allTopicsChosen}
+              mb={rem(70)}
+            >
+              Practice Everything
+            </Chip>
+          </ScrollArea>
           <Group
             gap={rem(15)}
             style={{ position: "absolute", bottom: rem(15), left: rem(15) }}
