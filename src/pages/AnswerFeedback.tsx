@@ -1,6 +1,7 @@
 import { Button, Image, rem, Text, Title } from "@mantine/core"
 import { isCorrect, Problem } from "../api/Problem"
 import { useHotkeys } from "@mantine/hooks"
+import { NO_SOLUTION_OPTION } from "../api/constants/otherConstants"
 
 export interface FeedbackArgs {
   problem: Problem
@@ -9,12 +10,17 @@ export interface FeedbackArgs {
 }
 
 export function AnswerFeedback(args: FeedbackArgs) {
-  // TODO add trim
-  const correct = isCorrect(args.userAnswer, args.problem)
-  const msg = correct
-    ? "Correct! Good Job!!!"
-    : "Incorrect! Correct Answer(s): " + args.problem.solutions.join(", ")
   useHotkeys([["Enter", args.onContinue]]) // allows user to press enter to continue
+  const correct = isCorrect(args.userAnswer, args.problem)
+  let msg = "Correct! Good Job!!!"
+  if (!correct) {
+    const sols = args.problem.solutions
+    if (sols.includes(NO_SOLUTION_OPTION)) {
+      msg = "Incorrect! There was no solution."
+    } else {
+      msg = "Incorrect! Correct Answer(s): " + args.problem.solutions.join(", ")
+    }
+  } 
 
   return (
     <div style={{ maxWidth: rem(600), minWidth: rem(300) }}>

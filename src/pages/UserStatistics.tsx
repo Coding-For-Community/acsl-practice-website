@@ -1,7 +1,11 @@
 import {
+  Box,
+  Center,
+  Container,
   Divider,
   Group,
   HoverCard,
+  Paper,
   rem,
   Switch,
   Text,
@@ -12,6 +16,7 @@ import { ALL_CONTEST_TOPICS } from "../api/Topic"
 import { TopicScore } from "../components/TopicScore"
 import { memo, useState } from "react"
 import { CustomDrawer } from "../components/CustomDrawer"
+import { SmallCircle } from "../components/SmallCircle"
 
 export const UserStatistics = memo(UserStatisticsImpl)
 export interface UserStatisticsArgs {
@@ -24,6 +29,15 @@ function UserStatisticsImpl(args: UserStatisticsArgs) {
   const data = args.playerData
   if (data == null) return <></>
   const [viewAsPercent, setViewAsPercent] = useState(false)
+  let numCorrect = 0
+  let numTotal = 0
+  for (let value of Object.values(data.statistics)) {
+    if (value == null) continue
+    const slashIdx = value.indexOf("/")
+    if (slashIdx === -1) continue
+    numCorrect += parseInt(value.substring(0, slashIdx))
+    numTotal += parseInt(value.substring(slashIdx + 1))
+  }
 
   return (
     <CustomDrawer
@@ -31,9 +45,25 @@ function UserStatisticsImpl(args: UserStatisticsArgs) {
       onClose={args.close}
       title="Your Statistics"
     >
-      <Group gap={rem(5)}>
+      <Title order={4} mb={rem(3)}>Overall</Title>
+      <Divider />
+
+      <Group mt={rem(5)}>
+        <Text fz="md">Coins</Text>
+        <SmallCircle bg="yellow">{data.totalCoins}</SmallCircle>
+      </Group>
+      <Group mt={rem(5)}>
+        <Text fz="md">Total Correct</Text>
+        <SmallCircle bg="green">{numCorrect}</SmallCircle>
+      </Group>
+      <Group mt={rem(5)}>
+        <Text fz="md">Total Attempts</Text>
+        <SmallCircle bg="blue" fz="sm">{numTotal}</SmallCircle>
+      </Group>
+
+      <Group gap={rem(5)} mt={rem(20)}>
         <Title order={4} mb={rem(3)}>
-          Topic Scores
+          Scores by Topic
         </Title>
         <HoverCard>
           <HoverCard.Target>
@@ -68,7 +98,8 @@ function UserStatisticsImpl(args: UserStatisticsArgs) {
           />
         ))
       )}
-      <Title order={4} mb={rem(3)} mt={rem(30)}>
+
+      <Title order={4} mb={rem(3)} mt={rem(25)}>
         Achievements
       </Title>
       <Divider />

@@ -1,7 +1,7 @@
 import { Topic } from "./Topic"
 import { Division } from "./Division"
 import { Tolerance } from "./Tolerance"
-import { ALL_PROBLEMS } from "./allProblems"
+import { ALL_PROBLEMS } from "./constants/allProblems"
 
 export interface Problem {
   imageName: string
