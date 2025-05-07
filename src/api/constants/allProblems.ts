@@ -1,7 +1,8 @@
-import { Tolerance } from "./Tolerance"
-import { Division } from "./Division"
-import { Problem } from "./Problem"
-import { Topic } from "./Topic"
+import { Tolerance } from "../Tolerance"
+import { Division } from "../Division"
+import { Problem } from "../Problem"
+import { Topic } from "../Topic"
+import { NO_SOLUTION_OPTION } from "./otherConstants"
 
 type FileName = string
 type Solution = string | { answers: string[]; tolerance?: Tolerance }
@@ -110,10 +111,7 @@ export const ALL_PROBLEMS: Problem[] = [
     "33.png": "2",
     "34.png": "C",
     "35.png": { answers: ["(1,1,0)", "(0,0,0)", "(0,1,0)"] },
-    "36.png": {
-      answers: ["NONE", "N/A", "Nothing", "Null"],
-      tolerance: "Lenient",
-    },
+    "36.png": NO_SOLUTION_OPTION,
     "37.png": "0",
     "38.png": { answers: ["(1,1,0)", "(1,0,0)"] },
     "39.png": "A!BC",
@@ -164,5 +162,5 @@ export const ALL_PROBLEMS: Problem[] = [
         "DB,CB,AB",
       ],
     },
-  }),
+  })
 ]

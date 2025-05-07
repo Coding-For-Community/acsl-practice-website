@@ -29,8 +29,7 @@ import {
 } from "./api/Topic"
 import { Leaderboard } from "./pages/Leaderboard"
 import { UserStatistics } from "./pages/UserStatistics"
-
-const ANON_PLAYER_NAME = "ANONYMOUS PLAYER" // testing
+import { ANON_PLAYER_NAME } from "./api/constants/otherConstants"
 
 export function App() {
   const [topics, setTopics] = useState<Topic[]>([])
@@ -95,7 +94,7 @@ export function App() {
               onClick={() => setSidebarOpen(!sidebarOpen)}
             />
             <Image src="ca-icon.png" alt="logo" h={rem(30)} w={rem(30)} />
-            <Title order={3}>CA ACSL practice website</Title>
+            <Title order={3} visibleFrom="xs">CA ACSL practice website</Title>
             <Text ml="auto" mr={rem(14)} c="blue" fw="bold" fz="lg">
               {playerData?.totalCoins ?? 0} Coins
             </Text>
@@ -172,13 +171,7 @@ export function App() {
             style={{ position: "absolute", bottom: rem(15), left: rem(15) }}
           >
             <Button onClick={() => setStatsOpen(true)}>Your Statistics</Button>
-            <Button
-              color="yellow"
-              onClick={() => {
-                setLeaderboardOpen(true)
-                console.log("Leaderboard OPEN: " + leaderboardOpen)
-              }}
-            >
+            <Button color="yellow" onClick={() => setLeaderboardOpen(true)}>
               Leaderboard
             </Button>
           </Group>
@@ -191,11 +184,11 @@ export function App() {
               problem={problem}
               onSubmit={answer => {
                 setAnswer(answer)
-                if (playerData == null) return
+                if (playerData == null || problem == null) return
                 updatePoints(
                   playerData,
-                  problem!!.topic,
-                  isCorrect(answer, problem!!),
+                  problem.topic,
+                  isCorrect(answer, problem),
                 )
                   .then(() => sheetsDataQ.refetch())
                   .then(() => console.log("Points added successfully."))

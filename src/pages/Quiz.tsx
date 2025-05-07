@@ -1,9 +1,10 @@
-import { Alert, Button, Code, Image, rem, Text, TextInput } from "@mantine/core"
+import { Alert, Button, Code, Group, Image, rem, Switch, Text, TextInput } from "@mantine/core"
 import { useState } from "react"
 import { Problem } from "../api/Problem"
 import { getHotkeyHandler } from "@mantine/hooks"
 import { Topic } from "../api/Topic"
 import { Info } from "../components/icons/Info"
+import { NO_SOLUTION_OPTION } from "../api/constants/otherConstants"
 
 export type QuizError = "ok" | "no user" | "no topic" | "no questions"
 
@@ -15,6 +16,7 @@ export interface QuizArgs {
 
 export function Quiz(args: QuizArgs) {
   const [answer, setAnswer] = useState("")
+  const [noSolution, setNoSolution] = useState(false)
   const disabled = args.problem == null || args.error !== "ok"
   let errMsg: string | null = null
   switch (args.error) {
@@ -27,6 +29,10 @@ export function Quiz(args: QuizArgs) {
     case "no questions":
       errMsg = "No questions fit the criteria given."
       break
+  }
+  const submitFunction = () => {
+    if (answer === "") return
+    args.onSubmit(noSolution ? NO_SOLUTION_OPTION : answer)
   }
   return (
     <div style={{ maxWidth: rem(600), minWidth: rem(300) }}>
@@ -44,18 +50,27 @@ export function Quiz(args: QuizArgs) {
         mb={10}
         value={answer}
         onChange={event => setAnswer(event.currentTarget.value)}
-        onKeyDown={getHotkeyHandler([["Enter", () => args.onSubmit(answer)]])}
+        onKeyDown={getHotkeyHandler([["Enter", submitFunction]])}
         error={errMsg}
-        disabled={disabled}
+        disabled={noSolution || disabled}
         errorProps={{ fz: "sm" }}
       />
-      <Button
-        onClick={() => args.onSubmit(answer)}
-        disabled={disabled}
-        mb={rem(10)}
-      >
-        Check Answer
-      </Button>
+      <Group mb={rem(10)} justify="center">
+        <Button onClick={submitFunction} disabled={disabled}>
+          Check Answer
+        </Button>
+        <Switch 
+          ml="auto"
+          label="No Solution"
+          labelPosition="left"
+          fw="600"
+          c="red.9" // sets text color
+          color="red.9" // sets the toggler color
+          disabled={disabled}
+          checked={noSolution}
+          onChange={() => setNoSolution(!noSolution)}
+        />
+      </Group>
       {(args.problem?.topic === Topic.DigitalElec ||
         args.problem?.topic === Topic.BoolAlgebra) && (
         <Alert
