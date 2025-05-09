@@ -9,8 +9,8 @@ import os
 
 # Paths for contest problems and solutions
 base_paths = [
-    "src/assets/contest-problems",
-    "src/assets/contest-solutions"
+    "public/contest-problems",
+    "public/contest-solutions"
 ]
 
 # Enum values from Topic.ts
