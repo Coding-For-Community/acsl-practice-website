@@ -81,20 +81,22 @@ export function App() {
         navbar={{
           width: rem(325),
           breakpoint: "sm",
-          collapsed: { mobile: !sidebarOpen }
+          collapsed: { mobile: !sidebarOpen },
         }}
         padding="md"
       >
         <AppShell.Header>
           <Group mt={rem(15)} ml={rem(14)} gap={rem(10)}>
-            <Burger 
-              hiddenFrom="sm" 
+            <Burger
+              hiddenFrom="sm"
               size="sm"
-              opened={sidebarOpen} 
+              opened={sidebarOpen}
               onClick={() => setSidebarOpen(!sidebarOpen)}
             />
             <Image src="ca-icon.png" alt="logo" h={rem(30)} w={rem(30)} />
-            <Title order={3} visibleFrom="xs">CA ACSL practice website</Title>
+            <Title order={3} visibleFrom="xs">
+              CA ACSL practice website
+            </Title>
             <Text ml="auto" mr={rem(14)} c="blue" fw="bold" fz="lg">
               {playerData?.totalCoins ?? 0} Coins
             </Text>

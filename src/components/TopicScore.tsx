@@ -30,7 +30,10 @@ function TopicScoreImpl(args: {
     <Group mt={rem(8)} mb={rem(2)}>
       <Text fz="sm">{args.topic}</Text>
       <Progress.Root size="xl" h={rem(20)} w={rem(200)} ml="auto">
-        <Progress.Section value={Math.max(evaluatedScore * 100, 15)} color={color}>
+        <Progress.Section
+          value={Math.max(evaluatedScore * 100, 15)}
+          color={color}
+        >
           <Progress.Label>{label}</Progress.Label>
         </Progress.Section>
       </Progress.Root>
