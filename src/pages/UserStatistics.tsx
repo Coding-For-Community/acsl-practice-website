@@ -1,11 +1,7 @@
 import {
-  Box,
-  Center,
-  Container,
   Divider,
   Group,
   HoverCard,
-  Paper,
   rem,
   Switch,
   Text,
@@ -45,7 +41,9 @@ function UserStatisticsImpl(args: UserStatisticsArgs) {
       onClose={args.close}
       title="Your Statistics"
     >
-      <Title order={4} mb={rem(3)}>Overall</Title>
+      <Title order={4} mb={rem(3)}>
+        Overall
+      </Title>
       <Divider />
 
       <Group mt={rem(5)}>
@@ -58,7 +56,9 @@ function UserStatisticsImpl(args: UserStatisticsArgs) {
       </Group>
       <Group mt={rem(5)}>
         <Text fz="md">Total Attempts</Text>
-        <SmallCircle bg="blue" fz="sm">{numTotal}</SmallCircle>
+        <SmallCircle bg="blue" fz="sm">
+          {numTotal}
+        </SmallCircle>
       </Group>
 
       <Group gap={rem(5)} mt={rem(20)}>

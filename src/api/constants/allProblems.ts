@@ -162,5 +162,5 @@ export const ALL_PROBLEMS: Problem[] = [
         "DB,CB,AB",
       ],
     },
-  })
+  }),
 ]

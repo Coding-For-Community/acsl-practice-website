@@ -20,7 +20,7 @@ export function AnswerFeedback(args: FeedbackArgs) {
     } else {
       msg = "Incorrect! Correct Answer(s): " + args.problem.solutions.join(", ")
     }
-  } 
+  }
 
   return (
     <div style={{ maxWidth: rem(600), minWidth: rem(300) }}>

@@ -1,4 +1,14 @@
-import { Alert, Button, Code, Group, Image, rem, Switch, Text, TextInput } from "@mantine/core"
+import {
+  Alert,
+  Button,
+  Code,
+  Group,
+  Image,
+  rem,
+  Switch,
+  Text,
+  TextInput,
+} from "@mantine/core"
 import { useState } from "react"
 import { Problem } from "../api/Problem"
 import { getHotkeyHandler } from "@mantine/hooks"
@@ -21,10 +31,12 @@ export function Quiz(args: QuizArgs) {
   let errMsg: string | null = null
   switch (args.error) {
     case "no user":
-      errMsg = "No user specified. (On the left panel; on small screens, click the menu icon to open it)"
+      errMsg =
+        "No user specified. (On the left panel; on small screens, click the menu icon to open it)"
       break
     case "no topic":
-      errMsg = "No topics have been chosen. (On the left panel; on small screens, click the menu icon to open it)"
+      errMsg =
+        "No topics have been chosen. (On the left panel; on small screens, click the menu icon to open it)"
       break
     case "no questions":
       errMsg = "No questions fit the criteria given."
@@ -59,7 +71,7 @@ export function Quiz(args: QuizArgs) {
         <Button onClick={submitFunction} disabled={disabled}>
           Check Answer
         </Button>
-        <Switch 
+        <Switch
           ml="auto"
           label="No Solution"
           labelPosition="left"
@@ -73,12 +85,7 @@ export function Quiz(args: QuizArgs) {
       </Group>
       {(args.problem?.topic === Topic.DigitalElec ||
         args.problem?.topic === Topic.BoolAlgebra) && (
-        <Alert
-          variant="light"
-          color="blue"
-          title="Notice:"
-          icon={<Info />}
-        >
+        <Alert variant="light" color="blue" title="Notice:" icon={<Info />}>
           <Text fz="xs">
             For Digital Elec/Boolean Alg questions which have multiple answers
             that satisfy the conditions given in the problem, only enter ONE of
