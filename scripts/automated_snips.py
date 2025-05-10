@@ -1,9 +1,8 @@
 """
 This is a script that allows you to take a lot of snips at once, while saving them as images
-within this directory.
-Use this to copy down an entire page of ACSL problems and their solutions.
+within this directory. Use this to copy down an entire page of ACSL problems and their solutions.
 
-IMPORTANT: to run this script, run `pip install Pillow` and `pip install keyboard` first.
+Make sure to install requirements (pip install -r scripts/requirements.txt) before running this.
 """ 
 
 import keyboard
