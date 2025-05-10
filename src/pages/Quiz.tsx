@@ -2,6 +2,7 @@ import {
   Alert,
   Button,
   Code,
+  FocusTrap,
   Group,
   Image,
   rem,
@@ -28,8 +29,10 @@ export interface QuizArgs {
 
 function QuizImpl(args: QuizArgs) {
   const [answer, setAnswer] = useState("")
+  console.log("render")
 
   const onSubmit = () => {
+    if (answer.trim() === "") return
     args.onSubmit(answer)
     args.timeRef.current = 0
   }
@@ -58,17 +61,19 @@ function QuizImpl(args: QuizArgs) {
           h="auto"
         />
       )}
-      <TextInput
-        label="Answer: "
-        placeholder="Type here; enter 'n/a' if no solution"
-        mb={rem(10)}
-        value={answer}
-        onChange={event => setAnswer(event.currentTarget.value)}
-        onKeyDown={getHotkeyHandler([["Enter", onSubmit]])}
-        error={errMsg}
-        disabled={disabled}
-        errorProps={{ fz: "sm" }}
-      />
+      <FocusTrap active={!disabled}>
+        <TextInput
+          label="Answer: "
+          placeholder="Answer here; type 'n/a' if no solution"
+          mb={rem(10)}
+          value={answer}
+          onChange={event => setAnswer(event.currentTarget.value)}
+          onKeyDown={getHotkeyHandler([["Enter", onSubmit]])}
+          error={errMsg}
+          disabled={disabled}
+          errorProps={{ fz: "sm" }}
+        />
+      </FocusTrap>
       <Group mb={rem(10)}>
         <Button onClick={onSubmit} disabled={disabled}>
           Check Answer
