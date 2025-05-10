@@ -29,7 +29,6 @@ export interface QuizArgs {
 
 function QuizImpl(args: QuizArgs) {
   const [answer, setAnswer] = useState("")
-  console.log("render")
 
   const onSubmit = () => {
     if (answer.trim() === "") return
