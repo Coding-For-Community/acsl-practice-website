@@ -5,28 +5,34 @@ import {
   Group,
   Image,
   rem,
-  Switch,
   Text,
   TextInput,
 } from "@mantine/core"
-import { useState } from "react"
-import { Problem } from "../api/Problem"
+import { memo, RefObject, useState } from "react"
+import { Problem } from "../api/types"
 import { getHotkeyHandler } from "@mantine/hooks"
-import { Topic } from "../api/Topic"
+import { Topic } from "../api/types"
 import { Info } from "../components/icons/Info"
-import { NO_SOLUTION_OPTION } from "../api/constants/otherConstants"
+import { Stopwatch } from "../components/Stopwatch"
+
+export const Quiz = memo(QuizImpl)
 
 export type QuizError = "ok" | "no user" | "no topic" | "no questions"
 
 export interface QuizArgs {
   problem: Problem | null
   error: QuizError
+  timeRef: RefObject<number>
   onSubmit: (answer: string) => void
 }
 
-export function Quiz(args: QuizArgs) {
+function QuizImpl(args: QuizArgs) {
   const [answer, setAnswer] = useState("")
-  const [noSolution, setNoSolution] = useState(false)
+
+  const onSubmit = () => {
+    args.onSubmit(answer)
+    args.timeRef.current = 0
+  }
   const disabled = args.problem == null || args.error !== "ok"
   let errMsg: string | null = null
   switch (args.error) {
@@ -42,10 +48,6 @@ export function Quiz(args: QuizArgs) {
       errMsg = "No questions fit the criteria given."
       break
   }
-  const submitFunction = () => {
-    if (answer === "") return
-    args.onSubmit(noSolution ? NO_SOLUTION_OPTION : answer)
-  }
   return (
     <div style={{ maxWidth: rem(600), minWidth: rem(300) }}>
       {args.problem != null && (
@@ -58,30 +60,20 @@ export function Quiz(args: QuizArgs) {
       )}
       <TextInput
         label="Answer: "
-        placeholder="Type Here"
-        mb={10}
+        placeholder="Type here; enter 'n/a' if no solution"
+        mb={rem(10)}
         value={answer}
         onChange={event => setAnswer(event.currentTarget.value)}
-        onKeyDown={getHotkeyHandler([["Enter", submitFunction]])}
+        onKeyDown={getHotkeyHandler([["Enter", onSubmit]])}
         error={errMsg}
-        disabled={noSolution || disabled}
+        disabled={disabled}
         errorProps={{ fz: "sm" }}
       />
-      <Group mb={rem(10)} justify="center">
-        <Button onClick={submitFunction} disabled={disabled}>
+      <Group mb={rem(10)}>
+        <Button onClick={onSubmit} disabled={disabled}>
           Check Answer
         </Button>
-        <Switch
-          ml="auto"
-          label="No Solution"
-          labelPosition="left"
-          fw="600"
-          c="red.9" // sets text color
-          color="red.9" // sets the toggler color
-          disabled={disabled}
-          checked={noSolution}
-          onChange={() => setNoSolution(!noSolution)}
-        />
+        <Stopwatch timeRef={args.timeRef} disabled={disabled} ml="auto" />
       </Group>
       {(args.problem?.topic === Topic.DigitalElec ||
         args.problem?.topic === Topic.BoolAlgebra) && (

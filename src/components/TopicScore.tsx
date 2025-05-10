@@ -1,15 +1,17 @@
 import { Group, Progress, rem, Text } from "@mantine/core"
 import { PlayerData } from "../api/api"
 import { memo } from "react"
-import { Topic } from "../api/Topic"
+import { Topic } from "../api/types"
 
 export const TopicScore = memo(TopicScoreImpl)
 
-function TopicScoreImpl(args: {
+export interface TopicScoreArgs {
   userData: PlayerData
   topic: Topic
   viewAsPercent?: boolean
-}) {
+}
+
+function TopicScoreImpl(args: TopicScoreArgs) {
   const scoreAsStr = args.userData.statistics[args.topic]
   if (scoreAsStr == null) return null
   let evaluatedScore: number = eval(scoreAsStr)

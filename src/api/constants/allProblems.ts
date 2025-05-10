@@ -1,7 +1,4 @@
-import { Tolerance } from "../Tolerance"
-import { Division } from "../Division"
-import { Problem } from "../Problem"
-import { Topic } from "../Topic"
+import { Tolerance, Division, Problem, Topic } from "../types"
 import { NO_SOLUTION_OPTION } from "./otherConstants"
 
 type FileName = string
