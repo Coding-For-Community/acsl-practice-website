@@ -7,6 +7,7 @@ import { CustomDrawer } from "../components/CustomDrawer"
 // when data from LeaderboardArgs(particularly PlayerData) changes.
 // This ensures that we aren't sorting stuff every time react re-renders.
 export const Leaderboard = memo(LeaderboardImpl)
+
 export interface LeaderboardArgs {
   open: boolean
   close: () => void

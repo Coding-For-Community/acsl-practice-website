@@ -1,4 +1,6 @@
-import { ALL_CONTEST_TOPICS, Topic } from "./Topic"
+import { Topic } from "./types"
+import { ALL_CONTEST_TOPICS } from "./constants/topicSchema"
+import { logDebug } from "./logDebug"
 
 export type AllPlayersData = Record<string, PlayerData>
 export interface PlayerData {
@@ -27,7 +29,7 @@ export async function fetchAllPlayerData(): Promise<AllPlayersData> {
   let playerIdx = 0
   for (const row of values) {
     const playerName = row[0]
-    const coins = row[1] == null ? 0 : parseInt(row[1])
+    const coins = row[1] == null ? 0 : parseFloat(row[1])
     const statistics: Partial<Record<Topic, string>> = {}
     for (let i = 0; i < ALL_CONTEST_TOPICS.length; i++) {
       statistics[ALL_CONTEST_TOPICS[i]] = row[i + 2]
@@ -50,22 +52,14 @@ export function allPlayers(data: AllPlayersData): string[] {
 export async function updatePoints(
   playerData: PlayerData,
   topic: Topic,
-  correct: boolean,
+  points: number,
 ) {
-  try {
-    console.log("Correct: " + correct)
-    await fetch(import.meta.env.VITE_SHEET_UPDATE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `playerIndex=${playerData.id}&topicIndex=${ALL_CONTEST_TOPICS.indexOf(topic)}&correct=${correct}`,
-    })
-  } catch (err) {
-    if (err instanceof TypeError) {
-      console.log(
-        "Cors error might appear; doesn't matter because we don't need the response",
-      )
-    } else {
-      throw err
-    }
-  }
+  const body = `playerIndex=${playerData.id}&topicIndex=${ALL_CONTEST_TOPICS.indexOf(topic)}&points=${points}`
+  logDebug("[updatePoints] body: " + body)
+  await fetch(import.meta.env.VITE_SHEET_UPDATE_URL, {
+    mode: "no-cors",
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: body,
+  })
 }
