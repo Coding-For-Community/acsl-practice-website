@@ -15,9 +15,6 @@ export async function fetchAllPlayerData(): Promise<AllPlayersData> {
     method: "GET",
     headers: { "Content-Type": "application/json", },
   })
-  if (resp.status != 200) {
-    console.error(resp.text)
-  }
   const json = await resp.json()
   const values: string[][] = json["values"]
   values.shift() // remove header row

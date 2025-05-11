@@ -56,7 +56,7 @@ export function App() {
 
   if (!sheetsDataQ.isSuccess) {
     if (sheetsDataQ.isError) {
-      console.log(sheetsDataQ.error)
+      console.log(sheetsDataQ.error.message)
     }
     return (
       <Group align="center" justify="center" h="100vh">
