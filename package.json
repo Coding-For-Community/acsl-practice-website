@@ -9,8 +9,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "predeploy-site": "npm run build",
+    "deploy-site": "gh-pages -d build",
+    "deploy-backend": "npx vercel backend --prod",
     "fmt": "npx prettier . --write && git add --renormalize ."
   },
   "dependencies": {
@@ -39,6 +40,7 @@
     "prettier": "3.5.3",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
+    "vercel": "^41.7.4",
     "vite": "^6.2.0"
   }
 }

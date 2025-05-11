@@ -1,6 +1,7 @@
 import { Topic } from "./types"
 import { ALL_CONTEST_TOPICS } from "./constants/topicSchema"
 import { logDebug } from "./logDebug"
+import { BACKEND_URL } from "./constants/otherConstants"
 
 export type AllPlayersData = Record<string, PlayerData>
 export interface PlayerData {
@@ -10,15 +11,10 @@ export interface PlayerData {
 }
 
 export async function fetchAllPlayerData(): Promise<AllPlayersData> {
-  const resp = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${import.meta.env.VITE_SHEET_ID}/values/Main!A1:N100?key=${import.meta.env.VITE_SHEETS_API_KEY}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    },
-  )
+  const resp = await fetch(BACKEND_URL + "/points", {
+    method: "GET",
+    headers: { "Content-Type": "application/json", },
+  })
   if (resp.status != 200) {
     console.error(resp.text)
   }
@@ -54,12 +50,15 @@ export async function updatePoints(
   topic: Topic,
   points: number,
 ) {
-  const body = `playerIndex=${playerData.id}&topicIndex=${ALL_CONTEST_TOPICS.indexOf(topic)}&points=${points}`
+  const body = JSON.stringify({
+    playerIndex: playerData.id,
+    topicIndex: ALL_CONTEST_TOPICS.indexOf(topic),
+    points: points,
+  })
   logDebug("[updatePoints] body: " + body)
-  await fetch(import.meta.env.VITE_SHEET_UPDATE_URL, {
-    mode: "no-cors",
+  await fetch(BACKEND_URL + "/update-score", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: { "Content-Type": "application/json" },
     body: body,
   })
 }

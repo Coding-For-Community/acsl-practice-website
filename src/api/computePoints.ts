@@ -14,8 +14,9 @@ export function computePoints(
     return 0
   }
   setStreak(streak + 1)
-  let timerBonus = Math.pow(1.1, -time)
+  let timerBonus = Math.pow(1.03, -time)
   timerBonus = Math.round(timerBonus * 10) / 10 // rounds to the first decimal place
+  timerBonus = Math.min(timerBonus, 0.7)
   const streakBonus = Math.floor((streak + 1) * 0.4)
   const points = timerBonus + streakBonus + 1
   logDebug(`[computePoints] points: ${points}, time: ${time}`)

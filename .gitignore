@@ -13,6 +13,9 @@ dist-ssr
 build
 *.local
 backend/__pycache__
+backend/.vercel
+backend/client_secret.json
+backend/.env*.local
 
 # Editor directories and files
 .vscode/*

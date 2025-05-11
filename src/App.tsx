@@ -33,6 +33,7 @@ import { Leaderboard } from "./pages/Leaderboard"
 import { UserStatistics } from "./pages/UserStatistics"
 import { ANON_PLAYER_NAME } from "./api/constants/otherConstants"
 import { computePoints } from "./api/computePoints"
+import { logDebug } from "./api/logDebug"
 
 export function App() {
   const [topics, setTopics] = useState<Topic[]>([])
@@ -42,6 +43,7 @@ export function App() {
   const [answer, setAnswer] = useState<string | null>(null)
   const [latestPoints, setLatestPoints] = useState(0)
   const [streak, setStreak] = useState(0)
+  const [pointsCache, setPointsCache] = useState(0)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
   const [statsOpen, setStatsOpen] = useState(false)
@@ -68,7 +70,7 @@ export function App() {
     currentPlayer == null || currentPlayer === ANON_PLAYER_NAME
       ? null
       : sheetsDataQ.data[currentPlayer]
-  const allTopicsChosen = topics.length === ALL_CONTEST_TOPICS.length
+  const allTopicsChosen = topics.length === ALL_CONTEST_TOPICS.length 
   let error: QuizError = "ok"
   if (currentPlayer == null) {
     error = "no user"
@@ -102,7 +104,7 @@ export function App() {
               CA ACSL practice website
             </Title>
             <Text ml="auto" c="blue" fw="bold" fz="lg">
-              Coins: {playerData?.totalCoins ?? 0}
+              Coins: {(playerData == null ? 0 : (playerData.totalCoins + pointsCache)).toFixed(1)}
             </Text>
             <Divider orientation="vertical" size="sm" />
             <Text c="yellow" fw="bold" fz="lg">
@@ -204,9 +206,15 @@ export function App() {
                   setStreak,
                 )
                 setLatestPoints(points)
+                // pointsCache basically allows the user to see point updates immediately
+                // even when a backend call is being made
+                setPointsCache(prevValue => prevValue + points)
                 updatePoints(playerData, problem.topic, points)
                   .then(() => sheetsDataQ.refetch())
-                  .then(() => console.log("Points added successfully."))
+                  .then(() => {
+                    logDebug("[computePoints] Points added successfully.")
+                    setPointsCache(prevValue => prevValue - points)
+                  })
               }}
             />
           ) : (
