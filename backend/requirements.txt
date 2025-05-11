@@ -1,4 +1,7 @@
 fastapi
 uvicorn
 openai
-aiohttp
+gspread_asyncio
+google-oauth
+python-dotenv
+nest_asyncio
