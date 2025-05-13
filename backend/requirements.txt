@@ -1,5 +1,7 @@
 fastapi
+slowapi
 uvicorn
 openai
 aiogoogle
+aiohttp
 python-dotenv

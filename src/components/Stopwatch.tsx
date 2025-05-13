@@ -19,13 +19,10 @@ export function Stopwatch(args: StopwatchArgs) {
   const [ellapsedSecs, setEllapsedSecs] = useState(0)
   useEffect(() => {
     if (args.disabled) return
-    const interval = setInterval(
-      () => {
-        args.timeRef.current += 1
-        setEllapsedSecs(args.timeRef.current)
-      },
-      1000,
-    )
+    const interval = setInterval(() => {
+      args.timeRef.current += 1
+      setEllapsedSecs(args.timeRef.current)
+    }, 1000)
     return () => clearInterval(interval)
   }, [args.timeRef, args.disabled])
 

@@ -1,7 +1,7 @@
 {
   "builds": [
-    { 
-      "src": "main.py", 
+    {
+      "src": "main.py",
       "use": "@vercel/python",
       "config": {
         "runtime": "python3.12"
@@ -9,13 +9,13 @@
     }
   ],
   "routes": [
-    { 
-      "src": "/(.*)", 
+    {
+      "src": "/(.*)",
       "dest": "/main.py",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       "headers": {
         "Access-Control-Allow-Origin": "*"
-      } 
+      }
     }
   ],
   "env": {

@@ -49,7 +49,7 @@ function UserStatisticsImpl(args: UserStatisticsArgs) {
 
       <Group mt={rem(5)}>
         <Text fz="md">Coins</Text>
-        <SmallCircle bg="yellow">{data.totalCoins}</SmallCircle>
+        <SmallCircle bg="yellow">{Math.round(data.totalCoins)}</SmallCircle>
       </Group>
       <Group mt={rem(5)}>
         <Text fz="md">Total Correct</Text>
