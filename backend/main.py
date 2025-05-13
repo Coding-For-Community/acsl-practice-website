@@ -1,52 +1,82 @@
-# Note to self: make sure to set the SHEET_ID variable by
-# cd backend
-# npx vercel env add SHEET_ID 
 import os
 import asyncio
+from openai import AsyncOpenAI
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-# from google-auth package
 from aiogoogle import Aiogoogle
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 from aiogoogle.auth.creds import ServiceAccountCreds 
-from pydantic import BaseModel
 from dotenv import load_dotenv
 
-class ScoreSchema(BaseModel):
-  playerIndex: int
-  topicIndex: int
-  points: float
+from schema import AiPromptSchema, ScoreSchema
+from sheet_handler import SheetHandler
 
-class SheetHandler:
-  def __init__(self, aiogoogle: Aiogoogle, sheets_api):
-    self.aiogoogle = aiogoogle
-    self.sheets_api = sheets_api
+local_dir = os.path.dirname(os.path.realpath(__file__))
+try:
+  load_dotenv(local_dir + "/.env.local")
+except FileNotFoundError:
+  pass
+with open(os.path.join(local_dir, "client_secret.json"), "r") as f:
+  service_account_info = eval(f.read()) # Convert JSON string to dictionary
+g_acc_creds = ServiceAccountCreds(
+  scopes=["https://www.googleapis.com/auth/spreadsheets"],
+  **service_account_info
+)   
 
-  async def get_values(self, range: str, sheet: str = "Main") -> list[list[str]]:
-    response = await self.aiogoogle.as_service_account(
-      self.sheets_api.spreadsheets.values.get(
-        spreadsheetId=os.environ["SHEET_ID"],
-        range=sheet + "!" + range
-      )
+openai = AsyncOpenAI(api_key=os.environ["OPENAI_API_KEY"])
+ai_system_prompt = {
+  "type": "input_text",
+  "text": """
+    You are an assistant for a practice website for ACSL.
+    The user needs clarification on a problem they just solved. 
+    They have a specific question about the problem; answer that, and nothing else.
+    The first image attached is a screenshot of the problem,
+    and the second image attached is a screenshot of the solution.
+  """
+}
+
+app = FastAPI()
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=["*"],
+  allow_credentials=False,
+  allow_methods=["*"],
+  allow_headers=["*"]
+)
+
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+@app.get("/")
+async def home():
+  return "Hello there."
+
+@app.get("/points")
+@limiter.limit("30/minute")
+async def points(request: Request):
+  try:
+    async with Aiogoogle(service_account_creds=g_acc_creds) as aiogoogle:
+      handler = SheetHandler(aiogoogle, await aiogoogle.discover("sheets", "v4"))
+      return {
+        "values": await handler.get_values("A2:N50")
+      }
+  except Exception as e:
+    return "ERROR: " + str(e)
+
+@app.post("/update-score")
+async def update_score(schema: ScoreSchema):
+  try:
+    await asyncio.gather(
+      update_points(schema.playerIndex, schema.points),
+      update_topic_score(schema.topicIndex, schema.playerIndex, schema.points),
     )
-    return response["values"]
-
-  async def get_value(self, target: str, sheet: str = "Main"):
-    return (await self.get_values(target + ":" + target, sheet))[0][0]
-
-  async def set_value(self, target: str, value: any, sheet: str = "Main"):
-    range = sheet + "!" + target + ":" + target
-    body = { 
-      "values": [[str(value)]] 
-    }
-    await self.aiogoogle.as_service_account(
-      self.sheets_api.spreadsheets.values.update(
-        spreadsheetId=os.environ["SHEET_ID"],
-        range=range,
-        valueInputOption="USER_ENTERED",
-        json=body
-      )
-    )
+    return { "result": "Success!" }
+  except Exception as e:
+    return "ERROR: " + str(e)
 
 async def update_points(player_idx: int, new_points: float):
   if new_points > 0.01:
@@ -72,65 +102,52 @@ async def update_topic_score(topic_idx: int, player_idx: int, new_points: float)
       topic_score = f"{total_correct}/{total_attempts}"
     await handler.set_value(identifier, topic_score)
 
-
-local_dir = os.path.dirname(os.path.realpath(__file__))
-try:
-  load_dotenv(local_dir + "/.env.local")
-except FileNotFoundError:
-  pass
-# Load credentials from service account JSON
-with open(os.path.join(local_dir, "client_secret.json"), "r") as f:
-  service_account_info = eval(f.read()) # Convert JSON string to dictionary
-# Define service account credentials
-g_acc_creds = ServiceAccountCreds(
-  scopes=["https://www.googleapis.com/auth/spreadsheets"],
-  **service_account_info
-)   
-
-app = FastAPI()
-app.add_middleware(
-  CORSMiddleware,
-  allow_origins=["*"],
-  allow_credentials=False,
-  allow_methods=["*"],
-  allow_headers=["*"]
-)
-
-@app.get("/")
-async def home(request: Request):
-  return "Hello there. I have been updated"
-
-@app.get("/points")
-async def points():
-  try:
-    async with Aiogoogle(service_account_creds=g_acc_creds) as aiogoogle:
-      handler = SheetHandler(aiogoogle, await aiogoogle.discover("sheets", "v4"))
-      return {
-        "values": await handler.get_values("A1:N50")
-      }
-  except Exception as e:
-    return "ERROR: " + str(e)
-
-@app.get("/update-score-test/{playerIndex}")
-async def update_score_test(playerIndex: int):
-  return await update_score(
-    ScoreSchema(
-      playerIndex=playerIndex,
-      topicIndex=0,
-      points=1.0
-    )
+@app.post("/ai-prompt")
+@limiter.limit("10/minute")
+async def prompt_ai(request: Request, schema: AiPromptSchema):
+  img_path = schema.problem.imageName.replace(" ", "%20")
+  problem_img_url = "https://coding-for-community.github.io/acsl-practice-website/contest-problems/" + img_path
+  solution_img_url = "https://coding-for-community.github.io/acsl-practice-website/contest-solutions/" + img_path
+  print(problem_img_url)
+  response_inputs = [
+    {
+      "role": "developer",
+      "content": [
+        ai_system_prompt,
+        { 
+          "type": "input_text", 
+          "text": f"""
+            Here is the appropriate wiki page for more info: https://www.categories.acsl.org/wiki/index.php?title={schema.problem.topic.replace(" ", "_")}
+            The user's problem is in the ${schema.problem.topic} topic of ACSL.
+            Correct solutions include: ${schema.problem.solutions}
+          """
+        }
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        { "type": "input_image", "image_url": problem_img_url },
+        { "type": "input_image", "image_url": solution_img_url },
+      ]
+    }
+  ]
+  for prompt in schema.messages:
+    response_inputs.append({
+      "role": "assistant" if prompt.isAi else "user",
+      "content": [
+        { 
+          "type": "output_text" if prompt.isAi else "input_text", 
+          "text": prompt.content 
+        }
+      ]
+    })
+  response = await openai.responses.create(
+    model="gpt-4o-mini",
+    input=response_inputs,
   )
-
-@app.post("/update-score")
-async def update_score(schema: ScoreSchema):
-  try:
-    await asyncio.gather(
-      update_points(schema.playerIndex, schema.points),
-      update_topic_score(schema.topicIndex, schema.playerIndex, schema.points)
-    )
-    return { "result": "Success!" }
-  except Exception as e:
-    return "ERROR: " + str(e)
+  print("OUTPUT: " + response.output_text)
+  return { "response": response.output_text }
 
 if __name__ == "__main__":
   uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)

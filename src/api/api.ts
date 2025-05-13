@@ -13,11 +13,10 @@ export interface PlayerData {
 export async function fetchAllPlayerData(): Promise<AllPlayersData> {
   const resp = await fetch(BACKEND_URL + "/points", {
     method: "GET",
-    headers: { "Content-Type": "application/json", },
+    headers: { "Content-Type": "application/json" },
   })
   const json = await resp.json()
   const values: string[][] = json["values"]
-  values.shift() // remove header row
   const finalData: AllPlayersData = {}
   let playerIdx = 0
   for (const row of values) {
@@ -25,7 +24,11 @@ export async function fetchAllPlayerData(): Promise<AllPlayersData> {
     const coins = row[1] == null ? 0 : parseFloat(row[1])
     const statistics: Partial<Record<Topic, string>> = {}
     for (let i = 0; i < ALL_CONTEST_TOPICS.length; i++) {
-      statistics[ALL_CONTEST_TOPICS[i]] = row[i + 2]
+      const fraction = row[i + 2]
+      if (fraction == null || fraction === "") {
+        continue
+      }
+      statistics[ALL_CONTEST_TOPICS[i]] = fraction
     }
     finalData[playerName] = {
       id: playerIdx,

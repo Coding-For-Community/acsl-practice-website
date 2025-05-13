@@ -34,6 +34,7 @@ import { UserStatistics } from "./pages/UserStatistics"
 import { ANON_PLAYER_NAME } from "./api/constants/otherConstants"
 import { computePoints } from "./api/computePoints"
 import { logDebug } from "./api/logDebug"
+import { ChatbotChat, ChatMsg } from "./pages/ChatbotChat"
 
 export function App() {
   const [topics, setTopics] = useState<Topic[]>([])
@@ -47,6 +48,7 @@ export function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [leaderboardOpen, setLeaderboardOpen] = useState(false)
   const [statsOpen, setStatsOpen] = useState(false)
+  const [messages, setMessages] = useState<ChatMsg[]>([])
   const timeRef = useRef(0)
   const sheetsDataQ = useQuery({
     queryKey: ["googleSheetsData"],
@@ -70,7 +72,7 @@ export function App() {
     currentPlayer == null || currentPlayer === ANON_PLAYER_NAME
       ? null
       : sheetsDataQ.data[currentPlayer]
-  const allTopicsChosen = topics.length === ALL_CONTEST_TOPICS.length 
+  const allTopicsChosen = topics.length === ALL_CONTEST_TOPICS.length
   let error: QuizError = "ok"
   if (currentPlayer == null) {
     error = "no user"
@@ -104,7 +106,11 @@ export function App() {
               CA ACSL practice website
             </Title>
             <Text ml="auto" c="blue" fw="bold" fz="lg">
-              Coins: {(playerData == null ? 0 : (playerData.totalCoins + pointsCache)).toFixed(1)}
+              Coins:{" "}
+              {(playerData == null
+                ? 0
+                : playerData.totalCoins + pointsCache
+              ).toFixed(1)}
             </Text>
             <Divider orientation="vertical" size="sm" />
             <Text c="yellow" fw="bold" fz="lg">
@@ -123,10 +129,11 @@ export function App() {
               data={[ANON_PLAYER_NAME].concat(allPlayers(sheetsDataQ.data))}
               value={currentPlayer}
               onChange={value => {
-                if (value != null) {
-                  setAnswer(null)
-                  setCurrentPlayer(value)
-                }
+                if (value == null) return
+                setAnswer(null)
+                setStreak(0)
+                timeRef.current = 0
+                setCurrentPlayer(value)
               }}
             />
             <Text size="xs" c="gray" mb={rem(15)}>
@@ -225,11 +232,19 @@ export function App() {
               onContinue={() => {
                 setAnswer(null)
                 setProblem(randomProblem(topics, division))
+                setMessages([])
               }}
             />
           )}
         </AppShell.Main>
       </AppShell>
+
+      <ChatbotChat
+        problem={problem}
+        userAnswer={answer}
+        messages={messages}
+        setMessages={setMessages}
+      />
 
       <UserStatistics
         open={statsOpen}
