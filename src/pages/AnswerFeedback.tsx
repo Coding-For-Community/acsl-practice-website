@@ -15,25 +15,18 @@ export interface FeedbackArgs {
 function AnswerFeedbackImpl(args: FeedbackArgs) {
   useHotkeys([["Enter", args.onContinue]]) // allows user to press enter to continue
   const correct = args.points > 0.01
-  let msg = correct
-    ? "Correct! Good Job!!!"
-    : "Incorrect! Correct Answer(s): " + args.problem.solutions.join(", ")
 
   return (
     <div style={{ maxWidth: rem(600), minWidth: rem(300) }}>
       <Title order={3} mb={rem(15)} c={correct ? "green" : "red"}>
-        {msg}
+        {correct ? "Correct, Good Job!!" : "Incorrect!"}
       </Title>
-      <Text mb={rem(5)} td="underline">
-        Solution:
-      </Text>
-      <Image
-        src={`contest-solutions/${args.problem.imageName}`}
-        alt="Problem Solution Image"
-        h="auto"
-        fit="contain"
-        mb={rem(5)}
-      />
+      <Text mb={rem(5)}>Your answer: {args.userAnswer}</Text>
+      <Text mb={rem(5)} td="bold"><strong>Correct answer(s):</strong> {args.problem.solutions.join(", ")}</Text>
+      <Text mb={rem(5)} c={correct ? "green" : "red"}>Points earned: {args.points}</Text>
+
+      <details style={{ marginBottom: '0.5rem' }} open={!correct}>
+        <summary>Problem and Solution</summary>
       <Text mb={rem(5)} td="underline">
         Problem:
       </Text>
@@ -44,9 +37,19 @@ function AnswerFeedbackImpl(args: FeedbackArgs) {
         fit="contain"
         mb={rem(5)}
       />
-      <Text mb={rem(5)}>Your answer: {args.userAnswer}</Text>
-      <Text mb={rem(5)}>Points earned: {args.points}</Text>
-      <Button color={correct ? "green" : "gray"} onClick={args.onContinue}>
+      <Text mb={rem(5)} td="underline">
+        Solution:
+      </Text>
+      <Image
+        src={`contest-solutions/${args.problem.imageName}`}
+        alt="Problem Solution Image"
+        h="auto"
+        fit="contain"
+        mb={rem(5)}
+      />
+      </details>
+
+      <Button color="gray" onClick={args.onContinue}>
         Continue
       </Button>
     </div>
