@@ -13,7 +13,7 @@ export function computePoints(
     logDebug(`[computePoints] points: 0, time: ${time}`)
     return 0
   }
-  let points = Math.sqrt(streak + 1) + Math.pow(0.5, time / 20) 
+  let points = Math.sqrt(streak + 1) + Math.pow(0.5, time / 20)
   points = Math.round(points * 10) / 10
   logDebug(`[computePoints] points: ${points}, time: ${time}`)
   setStreak(streak + 1)
