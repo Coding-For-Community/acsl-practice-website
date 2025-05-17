@@ -44,7 +44,6 @@ export function ChatbotChat(args: ChatbotChatArgs) {
     }
     setFocused(false)
   }
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOut)
     return () => document.removeEventListener("mousedown", handleClickOut)

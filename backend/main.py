@@ -55,6 +55,10 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 async def home():
   return "Hello there."
 
+@app.head("/")
+async def uptime_robot():
+  return "Ping has worked."
+
 @app.get("/points")
 @limiter.limit("30/minute")
 async def points(request: Request):

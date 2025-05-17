@@ -45,7 +45,7 @@ function AnswerFeedbackImpl(args: FeedbackArgs) {
         mb={rem(5)}
       />
       <Text mb={rem(5)}>Your answer: {args.userAnswer}</Text>
-      <Text mb={rem(5)}>Points earned: {args.points}</Text>
+      <Text mb={rem(5)}>Points earned: {args.points.toFixed(1)}</Text>
       <Button color={correct ? "green" : "gray"} onClick={args.onContinue}>
         Continue
       </Button>

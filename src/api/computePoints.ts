@@ -13,13 +13,10 @@ export function computePoints(
     logDebug(`[computePoints] points: 0, time: ${time}`)
     return 0
   }
-  setStreak(streak + 1)
-  let timerBonus = Math.pow(1.03, -time)
-  timerBonus = Math.round(timerBonus * 10) / 10 // rounds to the first decimal place
-  timerBonus = Math.min(timerBonus, 0.7)
-  const streakBonus = Math.floor(Math.sqrt(streak) * 10) / 10
-  const points = timerBonus + streakBonus + 1
+  let points = Math.sqrt(streak + 1) + Math.pow(0.5, time / 20) 
+  points = Math.round(points * 10) / 10
   logDebug(`[computePoints] points: ${points}, time: ${time}`)
+  setStreak(streak + 1)
   return points
 }
 
