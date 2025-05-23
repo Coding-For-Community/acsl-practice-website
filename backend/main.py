@@ -62,25 +62,21 @@ async def uptime_robot():
 @app.get("/points")
 @limiter.limit("30/minute")
 async def points(request: Request):
-  try:
-    async with Aiogoogle(service_account_creds=g_acc_creds) as aiogoogle:
-      handler = SheetHandler(aiogoogle, await aiogoogle.discover("sheets", "v4"))
-      return {
-        "values": await handler.get_values("A2:N50")
-      }
-  except Exception as e:
-    return "ERROR: " + str(e)
+  async with Aiogoogle(service_account_creds=g_acc_creds) as aiogoogle:
+    handler = SheetHandler(aiogoogle, await aiogoogle.discover("sheets", "v4"))
+    values = await handler.get_values("A2:N50")
+    if values:
+      return { "values": values }
+    else:
+      raise ValueError("No values found in the specified range.")
 
 @app.post("/update-score")
 async def update_score(schema: ScoreSchema):
-  try:
-    await asyncio.gather(
-      update_points(schema.playerIndex, schema.points),
-      update_topic_score(schema.topicIndex, schema.playerIndex, schema.points),
-    )
-    return { "result": "Success!" }
-  except Exception as e:
-    return "ERROR: " + str(e)
+  await asyncio.gather(
+    update_points(schema.playerIndex, schema.points),
+    update_topic_score(schema.topicIndex, schema.playerIndex, schema.points),
+  )
+  return { "result": "Success!" }
 
 async def update_points(player_idx: int, new_points: float):
   if new_points > 0.01:
@@ -88,7 +84,10 @@ async def update_points(player_idx: int, new_points: float):
     async with Aiogoogle(service_account_creds=g_acc_creds) as aiogoogle:
       handler = SheetHandler(aiogoogle, await aiogoogle.discover("sheets", "v4"))
       points = await handler.get_value(identifier)
-      points = float(points) + new_points
+      if points is None:
+        points = 0
+      else:
+        points = float(points) + new_points
       await handler.set_value(identifier, points)
 
 async def update_topic_score(topic_idx: int, player_idx: int, new_points: float):
