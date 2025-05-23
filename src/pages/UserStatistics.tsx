@@ -8,7 +8,7 @@ import {
   Title,
 } from "@mantine/core"
 import { PlayerData } from "../api/api"
-import { ALL_CONTEST_TOPICS } from "../api/constants/topicSchema"
+import { ALL_CONTEST_TOPICS } from "../api/constants/topicData"
 import { TopicScore } from "../components/TopicScore"
 import { memo, useState } from "react"
 import { CustomDrawer } from "../components/CustomDrawer"

@@ -26,15 +26,26 @@ import { AnswerFeedback } from "./pages/AnswerFeedback"
 import { Topic } from "./api/types"
 import {
   ALL_CONTEST_TOPICS,
-  DIVISION_SELECT_SCHEMA,
-  JUNIOR_DIVISION_SELECT_SCHEMA,
-} from "./api/constants/topicSchema"
+  CONTEST_TO_TOPIC_MAP,
+  NON_JUNIOR_DIV_TOPICS,
+} from "./api/constants/topicData"
 import { Leaderboard } from "./pages/Leaderboard"
 import { UserStatistics } from "./pages/UserStatistics"
 import { ANON_PLAYER_NAME } from "./api/constants/otherConstants"
 import { computePoints } from "./api/computePoints"
 import { logDebug } from "./api/logDebug"
 import { ChatbotChat, ChatMsg } from "./pages/ChatbotChat"
+
+const TOPIC_SELECT_DATA = [1, 2, 3, 4].map(contestNum => ({
+  group: `Contest ${contestNum}`,
+  items: CONTEST_TO_TOPIC_MAP[contestNum],
+}))
+const JV_TOPIC_SELECT_DATA = [1, 2, 3, 4].map(contestNum => ({
+  group: `Contest ${contestNum}`,
+  items: CONTEST_TO_TOPIC_MAP[contestNum].filter(
+    topic => !NON_JUNIOR_DIV_TOPICS.includes(topic),
+  ),
+}))
 
 export function App() {
   const [topics, setTopics] = useState<Topic[]>([])
@@ -156,9 +167,7 @@ export function App() {
               mb={rem(10)}
               label="Choose topics to practice"
               data={
-                division === "Junior"
-                  ? JUNIOR_DIVISION_SELECT_SCHEMA
-                  : DIVISION_SELECT_SCHEMA
+                division === "Junior" ? JV_TOPIC_SELECT_DATA : TOPIC_SELECT_DATA
               }
               value={topics}
               clearable

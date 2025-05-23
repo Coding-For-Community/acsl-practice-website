@@ -76,29 +76,31 @@ export const ALL_PROBLEMS: Problem[] = [
     "39.png": "567",
   }),
   // note: some problems excluded because we can't handle complex math exps yet
-  ...problems(Topic.DigitalElec, "Intermediate", "CaseSensitive", {
+  ...problems(Topic.DigitalElec, "Intermediate", "Lenient", {
     "1.png": { answers: ["(0,1,1)", "(1,1,1)"] },
     "3.png": "4",
     "4.png": "(1,0)",
-    "5.png": "XYZ + !Y!Z",
+    "5.png": {
+      answers: ["XYZ + !Y!Z", "!Y!Z + XYZ", "XYZ + !Z!Y", "!Z!Y + XYZ"],
+    },
     "6.png": "D",
     "7.png": "(1,0,1)",
     "9.png": "0",
-    "11.png": "B!C",
+    "11.png": permutated(["B", "!C"]),
     "12.png": { answers: ["(1,0,1)", "(0,0,1)", "(0,1,1)", "(0,1,0)"] },
     "13.png": { answers: ["(1,0,0)", "(0,0,0)", "(0,1,1)"] },
     "15.png": { answers: ["(0,0,0)", "(1,0,0)", "(1,1,0)"] },
     "16.png": "4",
-    "17.png": "A!B!C",
+    "17.png": permutated(["A", "!B", "!C"]),
     "18.png": { answers: ["(1,1,1)", "(0,1,1)", "(0,0,1)"] },
-    "19.png": "ABC",
+    "19.png": permutated(["A", "B", "C"]),
     "20.png": "3",
-    "21.png": "!AB!C",
+    "21.png": permutated(["!A", "B", "!C"]),
     "22.png": { answers: ["(0,0,0)", "(0,0,0)", "(0,1,1)"] },
     "23.png": "0",
     "24.png": "(1,1,0)",
     "25.png": "2",
-    "26.png": "!A!B!C!D",
+    "26.png": permutated(["!A", "!B", "!C", "!D"]),
     "27.png": { answers: ["(1,1,0)", "(0,1,0)", "(0,0,1)"] },
     "28.png": "(0,0,0)",
     "29.png": { answers: ["(1,0,1)", "(1,1,1)", "(0,1,1)"] },
@@ -111,11 +113,11 @@ export const ALL_PROBLEMS: Problem[] = [
     "36.png": NO_SOLUTION_OPTION,
     "37.png": "0",
     "38.png": { answers: ["(1,1,0)", "(1,0,0)"] },
-    "39.png": "A!BC",
-    "40.png": "!A!BC",
+    "39.png": permutated(["A!", "B", "C"]),
+    "40.png": permutated(["!A", "!B", "C"]),
     "41.png": "(1,1,1)",
     "42.png": "8",
-    "43.png": "ABC",
+    "43.png": permutated(["A", "B", "C"]),
   }),
   ...problems(Topic.BitStrFlicking, "Intermediate", "CaseAndSpaceSensitive", {
     "1.png": "00100",
@@ -149,15 +151,24 @@ export const ALL_PROBLEMS: Problem[] = [
     "26.png": "64",
     "28.png": "23",
     "30.png": "8",
-    "32.png": {
-      answers: [
-        "AB,CB,DB",
-        "AB,DB,CB",
-        "CB,AB,DB",
-        "CB,DB,AB",
-        "DB,AB,CB",
-        "DB,CB,AB",
-      ],
-    },
+    "32.png": permutated(["AB", "CB", "DB"]),
   }),
 ]
+
+function permutated<T>(values: T[], separator: string = ""): Solution {
+  const result: T[][] = []
+  const permute = (arr: T[], memo: T[] = []) => {
+    if (arr.length === 0) {
+      result.push(memo)
+    }
+    for (let i = 0; i < arr.length; i++) {
+      const curr = arr[i]
+      const remaining = arr.slice(0, i).concat(arr.slice(i + 1))
+      permute(remaining, memo.concat(curr))
+    }
+  }
+  permute(values)
+  return {
+    answers: result.map(arr => arr.join(separator)),
+  }
+}

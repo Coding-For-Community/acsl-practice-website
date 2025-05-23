@@ -5,3 +5,4 @@ scripts
 public
 node_modules
 backend
+docker

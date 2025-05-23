@@ -1,5 +1,5 @@
 import { Topic } from "./types"
-import { ALL_CONTEST_TOPICS } from "./constants/topicSchema"
+import { ALL_CONTEST_TOPICS } from "./constants/topicData"
 import { logDebug } from "./logDebug"
 import { BACKEND_URL } from "./constants/otherConstants"
 
