@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   AppShell,
   Burger,
@@ -64,7 +64,9 @@ export function App() {
   const sheetsDataQ = useQuery({
     queryKey: ["googleSheetsData"],
     queryFn: fetchAllPlayerData,
-    staleTime: Infinity, // this data will not refetch unless if .refetch() is called
+    // do not refetch unless window loads or refetch() is called
+    staleTime: Infinity, 
+    refetchOnWindowFocus: 'always'
   })
 
   if (!sheetsDataQ.isSuccess) {
